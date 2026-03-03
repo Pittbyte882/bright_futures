@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bright Futures Growing Minds LLC — Enrichment Classes for Kids</title>
+  <meta name="description" content="Enrichment classes for kids ages 3–8. Arts & crafts, STEM, social skills, early learning — Monday, Wednesday & Friday in small groups of 10." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sun:     #FFD23F;
+      --coral:   #FF6B6B;
+      --sky:     #4ECDC4;
+      --leaf:    #6BCB77;
+      --berry:   #845EC2;
+      --peach:   #FFF0E6;
+      --cream:   #FFFBF2;
+      --dark:    #1A1A2E;
+      --body:    #3D3D5C;
+      --card:    #FFFFFF;
+      --radius:  20px;
+      --shadow:  0 8px 40px rgba(26,26,46,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--body);
+      overflow-x: hidden;
+    }
+
+    /* ─── BLOBS ─── */
+    .blob-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.22;
+      animation: float 8s ease-in-out infinite;
+    }
+    .blob-1 { width: 420px; height: 420px; background: var(--sun);   top: -100px; left: -120px; animation-delay: 0s; }
+    .blob-2 { width: 320px; height: 320px; background: var(--coral); top: 200px; right: -80px; animation-delay: 2s; }
+    .blob-3 { width: 280px; height: 280px; background: var(--sky);   bottom: 80px; left: 10%; animation-delay: 4s; }
+    @keyframes float {
+      0%,100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-24px) scale(1.04); }
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(255,251,242,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid rgba(255,210,63,0.3);
+    }
+    .nav-logo {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem; font-weight: 700; color: var(--dark);
+      line-height: 1.2;
+    }
+    .nav-logo span { color: var(--coral); }
+    .nav-cta {
+      background: var(--coral); color: #fff;
+      border: none; border-radius: 50px;
+      padding: 12px 28px;
+      font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800;
+      cursor: pointer; transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(255,107,107,0.35);
+    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,107,0.45); }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative; min-height: 92vh;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 80px 40px 60px;
+      overflow: hidden;
+      gap: 40px;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 580px;
+      flex-shrink: 0;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--sun); color: var(--dark);
+      border-radius: 50px; padding: 8px 20px;
+      font-size: 0.9rem; font-weight: 800;
+      margin-bottom: 24px;
+      animation: popIn .6s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .hero-badge .dot { width: 8px; height: 8px; background: var(--coral); border-radius: 50%; }
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 4.8rem);
+      font-weight: 700; line-height: 1.1;
+      color: var(--dark);
+      animation: slideUp .7s cubic-bezier(.34,1.56,.64,1) .1s both;
+    }
+    h1 .accent-coral { color: var(--coral); }
+    h1 .accent-sky   { color: var(--sky);   }
+    .hero-sub {
+      font-size: 1.2rem; font-weight: 500; color: var(--body);
+      margin: 24px 0 40px; line-height: 1.7;
+      max-width: 540px;
+      animation: slideUp .7s cubic-bezier(.34,1.56,.64,1) .2s both;
+    }
+    .hero-btns {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      animation: slideUp .7s cubic-bezier(.34,1.56,.64,1) .3s both;
+    }
+    .btn-primary {
+      background: var(--coral); color: #fff;
+      border: none; border-radius: 50px;
+      padding: 16px 36px; font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(255,107,107,0.5); }
+    .btn-secondary {
+      background: transparent; color: var(--dark);
+      border: 2.5px solid var(--dark); border-radius: 50px;
+      padding: 16px 36px; font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem; font-weight: 800; cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .btn-secondary:hover { background: var(--dark); color: #fff; }
+
+    .hero-visual {
+      position: relative;
+      width: min(460px, 44vw);
+      flex-shrink: 0;
+      z-index: 1;
+      animation: slideLeft .8s cubic-bezier(.34,1.56,.64,1) .4s both;
+    }
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(60px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .hero-cards-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; padding: 20px;
+      align-items: stretch;
+    }
+    .hero-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: transform .3s;
+    }
+    .hero-card:hover { transform: translateY(-4px); }
+    .hero-card .emoji { font-size: 2.5rem; margin-bottom: 10px; }
+    .hero-card h3 { font-family: 'Fredoka', sans-serif; font-size: 1.1rem; color: var(--dark); font-weight: 600; }
+    .hero-card p { font-size: 0.82rem; color: #888; margin-top: 4px; }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 80px 40px; }
+    .section-label {
+      display: inline-block;
+      background: var(--sun); color: var(--dark);
+      border-radius: 50px; padding: 6px 18px;
+      font-size: 0.85rem; font-weight: 800;
+      margin-bottom: 16px; letter-spacing: .5px;
+    }
+    h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--dark); font-weight: 700;
+      line-height: 1.2; margin-bottom: 16px;
+    }
+    .section-sub { font-size: 1.1rem; color: var(--body); max-width: 540px; line-height: 1.7; }
+
+    /* ─── WHAT WE OFFER ─── */
+    #offer { background: var(--peach); position: relative; overflow: hidden; }
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px; margin-top: 48px;
+    }
+    .offer-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      box-shadow: var(--shadow);
+      transition: transform .3s, box-shadow .3s;
+      border-top: 5px solid transparent;
+    }
+    .offer-card:nth-child(1) { border-color: var(--coral); }
+    .offer-card:nth-child(2) { border-color: var(--sky);   }
+    .offer-card:nth-child(3) { border-color: var(--leaf);  }
+    .offer-card:nth-child(4) { border-color: var(--sun);   }
+    .offer-card:nth-child(5) { border-color: var(--berry); }
+    .offer-card:nth-child(6) { border-color: var(--coral); }
+    .offer-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(26,26,46,0.16); }
+    .offer-emoji { font-size: 2.8rem; margin-bottom: 16px; }
+    .offer-card h3 { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; color: var(--dark); font-weight: 600; margin-bottom: 8px; }
+    .offer-card p { font-size: 0.9rem; color: #666; line-height: 1.6; }
+
+    /* ─── SCHEDULE ─── */
+    #schedule { background: var(--cream); }
+    .schedule-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; margin-top: 48px;
+    }
+    .day-card {
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+      transition: transform .3s;
+    }
+    .day-card:hover { transform: translateY(-4px); }
+    .day-card.monday   { background: linear-gradient(135deg, #FFD23F 0%, #FFA62B 100%); }
+    .day-card.wednesday{ background: linear-gradient(135deg, #4ECDC4 0%, #44A9B0 100%); }
+    .day-card.friday   { background: linear-gradient(135deg, #845EC2 0%, #6A3FA8 100%); }
+    .day-card .day-name {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2rem; font-weight: 700; color: #fff;
+      margin-bottom: 8px;
+    }
+    .day-card .day-ages {
+      display: inline-block;
+      background: rgba(255,255,255,0.3); color: #fff;
+      border-radius: 50px; padding: 4px 14px;
+      font-size: 0.88rem; font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .day-detail { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .day-detail .icon { font-size: 1.1rem; }
+    .day-detail span { color: rgba(255,255,255,0.95); font-size: 0.95rem; font-weight: 600; }
+    .spots-bar {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50px; height: 10px; overflow: hidden;
+    }
+    .spots-fill {
+      height: 100%; background: #fff;
+      border-radius: 50px;
+      transition: width .5s ease;
+    }
+    .spots-label { color: rgba(255,255,255,0.9); font-size: 0.82rem; font-weight: 700; margin-top: 6px; }
+    .enroll-btn {
+      display: block; width: 100%; margin-top: 20px;
+      background: rgba(255,255,255,0.95); color: var(--dark);
+      border: none; border-radius: 50px;
+      padding: 13px; font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .enroll-btn:hover { background: #fff; transform: scale(1.02); }
+    .enroll-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* ─── PRICING ─── */
+    #pricing {
+      background: var(--dark);
+      position: relative; overflow: hidden;
+    }
+    #pricing h2 { color: #fff; }
+    #pricing .section-sub { color: rgba(255,255,255,0.7); }
+    #pricing .section-label { background: var(--sun); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px; margin-top: 48px;
+    }
+    .price-card {
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius); padding: 36px 28px;
+      text-align: center; position: relative;
+      transition: transform .3s, border-color .3s;
+    }
+    .price-card:hover { transform: translateY(-4px); border-color: var(--sun); }
+    .price-card.featured {
+      background: var(--sun); border-color: var(--sun);
+      transform: scale(1.04);
+    }
+    .price-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+    .price-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--coral); color: #fff;
+      border-radius: 50px; padding: 4px 16px;
+      font-size: 0.8rem; font-weight: 800; white-space: nowrap;
+    }
+    .price-card .price-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem; font-weight: 600;
+      color: #fff; margin-bottom: 8px;
+    }
+    .price-card.featured .price-title { color: var(--dark); }
+    .price-big {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 3.2rem; font-weight: 700; color: #fff;
+      line-height: 1; margin-bottom: 4px;
+    }
+    .price-card.featured .price-big { color: var(--dark); }
+    .price-desc { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+    .price-card.featured .price-desc { color: rgba(26,26,46,0.7); }
+    .price-note {
+      margin-top: 40px; text-align: center;
+      color: rgba(255,255,255,0.55); font-size: 0.88rem; line-height: 1.6;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    #how { background: var(--peach); }
+    .steps { display: flex; flex-direction: column; gap: 0; margin-top: 48px; max-width: 640px; }
+    .step { display: flex; gap: 24px; position: relative; }
+    .step:not(:last-child)::after {
+      content: ''; position: absolute;
+      left: 27px; top: 56px;
+      width: 2px; height: calc(100% - 16px);
+      background: var(--sun);
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--sun); color: var(--dark);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka', sans-serif; font-size: 1.4rem; font-weight: 700;
+      box-shadow: 0 4px 16px rgba(255,210,63,0.4);
+      position: relative; z-index: 1;
+    }
+    .step-content { padding-bottom: 36px; }
+    .step-content h3 { font-family: 'Fredoka', sans-serif; font-size: 1.3rem; color: var(--dark); font-weight: 600; margin-bottom: 6px; }
+    .step-content p { font-size: 0.95rem; color: var(--body); line-height: 1.6; }
+
+    /* ─── IMPORTANT INFO ─── */
+    #info { background: var(--cream); }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 40px; }
+    .info-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--card); border-radius: 16px;
+      padding: 24px; box-shadow: 0 4px 20px rgba(26,26,46,0.07);
+    }
+    .info-icon {
+      font-size: 2rem; flex-shrink: 0;
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--peach);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .info-item h4 { font-family: 'Fredoka', sans-serif; font-size: 1.1rem; color: var(--dark); margin-bottom: 4px; }
+    .info-item p { font-size: 0.9rem; color: #666; line-height: 1.55; }
+
+    /* ─── CTA BANNER ─── */
+    #cta-banner {
+      background: linear-gradient(135deg, var(--coral) 0%, #FF9A6C 100%);
+      padding: 80px 40px; text-align: center;
+    }
+    #cta-banner h2 { color: #fff; }
+    #cta-banner p { color: rgba(255,255,255,0.88); font-size: 1.15rem; margin: 16px auto 40px; max-width: 480px; line-height: 1.6; }
+    .btn-white {
+      background: #fff; color: var(--coral);
+      border: none; border-radius: 50px;
+      padding: 18px 48px; font-family: 'Nunito', sans-serif;
+      font-size: 1.15rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-white:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,0.2); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--dark); padding: 40px;
+      text-align: center; color: rgba(255,255,255,0.5);
+      font-size: 0.9rem; line-height: 1.8;
+    }
+    footer strong { color: rgba(255,255,255,0.85); }
+
+    /* ─── MODAL OVERLAY ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(26,26,46,0.7);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--card); border-radius: 28px;
+      padding: 48px 40px; max-width: 520px; width: 100%;
+      box-shadow: 0 24px 80px rgba(26,26,46,0.25);
+      transform: translateY(24px);
+      transition: transform .3s;
+      position: relative; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-close {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--peach); border: none;
+      width: 36px; height: 36px; border-radius: 50%;
+      font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--body); transition: background .2s;
+    }
+    .modal-close:hover { background: #FFDDCC; }
+    .modal h2 { font-size: 2rem; margin-bottom: 6px; }
+    .modal .modal-sub { font-size: 0.95rem; color: #888; margin-bottom: 28px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block; font-size: 0.9rem; font-weight: 700;
+      color: var(--dark); margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%; padding: 13px 16px;
+      border: 2px solid #E8E8F0; border-radius: 12px;
+      font-family: 'Nunito', sans-serif; font-size: 1rem;
+      color: var(--dark); background: var(--cream);
+      outline: none; transition: border-color .2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--coral); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .submit-btn {
+      width: 100%; background: var(--coral); color: #fff;
+      border: none; border-radius: 50px;
+      padding: 16px; font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+      transition: transform .2s, box-shadow .2s;
+      margin-top: 8px;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,107,107,0.5); }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .form-notice {
+      margin-top: 16px; background: var(--peach);
+      border-radius: 12px; padding: 14px 16px;
+      font-size: 0.88rem; color: var(--body); line-height: 1.6;
+    }
+    .form-notice strong { color: var(--coral); }
+
+    /* ─── SUCCESS STATE ─── */
+    .success-state { text-align: center; padding: 20px 0; }
+    .success-icon { font-size: 4rem; margin-bottom: 16px; }
+    .success-state h3 { font-family: 'Fredoka', sans-serif; font-size: 1.8rem; color: var(--dark); margin-bottom: 12px; }
+    .success-state p { color: var(--body); font-size: 1rem; line-height: 1.7; }
+
+    /* ─── ERROR MSG ─── */
+    .error-msg {
+      background: #FFE8E8; border-radius: 10px;
+      padding: 12px 16px; color: #CC2200;
+      font-size: 0.9rem; margin-bottom: 16px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.8); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .fade-in {
+      opacity: 1; transform: translateY(0);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-in.animate { opacity: 0; transform: translateY(24px); }
+    .fade-in.animate.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      section { padding: 60px 20px; }
+      #hero { padding: 80px 20px 60px; min-height: auto; }
+      .hero-visual { display: none; }
+      h1 { font-size: 2.6rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .modal { padding: 36px 24px; }
+      .price-card.featured { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Bright Futures<br><span>Growing Minds LLC</span></div>
+  <button class="nav-cta" onclick="openModal()">Reserve a Spot 🌟</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="blob-wrap">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="dot"></span>Now Enrolling — Limited Spots!</div>
+    <h1>Where Little Minds<br><span class="accent-coral">Grow Big</span><br><span class="accent-sky">Dreams ✨</span></h1>
+    <p class="hero-sub">Enrichment classes for kids ages 3–8 packed with arts &amp; crafts, STEM, songs, sensory play, and early learning — in small, nurturing groups of just 10.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="openModal()">Reserve Your Spot →</button>
+      <button class="btn-secondary" onclick="document.getElementById('schedule').scrollIntoView({behavior:'smooth'})">See the Schedule</button>
+    </div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-cards-grid">
+      <div class="hero-card"><div class="emoji">🎨</div><h3>Arts & Crafts</h3><p>Creative expression every class</p></div>
+      <div class="hero-card"><div class="emoji">🔬</div><h3>STEM Fun</h3><p>Science & sensory discovery</p></div>
+      <div class="hero-card"><div class="emoji">🎵</div><h3>Songs & Play</h3><p>Building confidence through music</p></div>
+      <div class="hero-card"><div class="emoji">🤝</div><h3>Social Skills</h3><p>Friendships &amp; teamwork</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE OFFER -->
+<section id="offer">
+  <div class="blob-wrap" style="opacity:.6">
+    <div class="blob" style="width:300px;height:300px;background:var(--sky);top:-80px;right:-60px;opacity:.15"></div>
+  </div>
+  <div class="section-label">What We Offer</div>
+  <h2 class="fade-in">Every Class Is an Adventure</h2>
+  <p class="section-sub fade-in">We blend learning and play so children develop essential skills while having the time of their lives.</p>
+  <div class="offer-grid">
+    <div class="offer-card fade-in">
+      <div class="offer-emoji">🎨</div>
+      <h3>Arts & Crafts</h3>
+      <p>Painting, drawing, cutting, gluing — hands-on creativity that builds fine motor skills and self-expression.</p>
+    </div>
+    <div class="offer-card fade-in">
+      <div class="offer-emoji">📚</div>
+      <h3>Early Learning Foundations</h3>
+      <p>Letters, numbers, colors, shapes — foundational skills delivered through games and activities kids love.</p>
+    </div>
+    <div class="offer-card fade-in">
+      <div class="offer-emoji">🎵</div>
+      <h3>Songs & Movement</h3>
+      <p>Music, rhythm, and movement that build confidence, listening skills, and joyful self-expression.</p>
+    </div>
+    <div class="offer-card fade-in">
+      <div class="offer-emoji">🤝</div>
+      <h3>Social Skills & Confidence</h3>
+      <p>Structured group play that teaches sharing, communication, empathy, and friendship.</p>
+    </div>
+    <div class="offer-card fade-in">
+      <div class="offer-emoji">🧪</div>
+      <h3>Sensory & STEM Activities</h3>
+      <p>Science experiments, sensory bins, and hands-on exploration that sparks natural curiosity.</p>
+    </div>
+    <div class="offer-card fade-in">
+      <div class="offer-emoji">👥</div>
+      <h3>Small Group Setting</h3>
+      <p>Just 10 children per class so every child gets attention, care, and the chance to thrive.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule">
+  <div class="section-label">Class Schedule</div>
+  <h2 class="fade-in">Pick Your Day</h2>
+  <p class="section-sub fade-in">Three days a week, two age groups — find the perfect fit for your child. All classes run <strong>10:30 AM – 1:30 PM</strong> with a snack/lunch break.</p>
+  <div class="schedule-grid" id="scheduleGrid">
+    <!-- Injected by JS -->
+  </div>
+  <p style="margin-top:24px;font-size:.9rem;color:#888;font-style:italic;">⚠️ Spot counts update in real time. Once a class is full, it will show as sold out.</p>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="blob-wrap">
+    <div class="blob" style="width:350px;height:350px;background:var(--berry);top:-100px;right:-80px;opacity:.2"></div>
+  </div>
+  <div class="section-label">Pricing</div>
+  <h2 class="fade-in">Simple, Flexible Pricing</h2>
+  <p class="section-sub fade-in">No hidden fees. Just great classes. Save more with a multi-class package.</p>
+  <div class="pricing-grid">
+    <div class="price-card fade-in">
+      <div class="price-title">Drop-In Class</div>
+      <div class="price-big">$40</div>
+      <div class="price-desc">Per single class<br>Try us out, no commitment</div>
+    </div>
+    <div class="price-card featured fade-in">
+      <div class="price-badge">🔥 Best Value</div>
+      <div class="price-title">4-Class Package</div>
+      <div class="price-big">$140</div>
+      <div class="price-desc">1 class per week · Save $20<br>4 weeks of enrichment</div>
+    </div>
+    <div class="price-card fade-in">
+      <div class="price-title">3-Class Package</div>
+      <div class="price-big">$80</div>
+      <div class="price-desc">1 class per week · Save $40<br>3 weeks of enrichment</div>
+    </div>
+  </div>
+  <p class="price-note fade-in">Payment is sent via Venmo after registration. You'll receive an email with payment instructions once you reserve your spot.</p>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">How It Works</div>
+  <h2 class="fade-in">Getting Started is Easy</h2>
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Choose Your Day & Package</h3>
+        <p>Pick Monday, Wednesday, or Friday based on your child's age group, then select a single class or a package.</p>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Fill Out the Registration Form</h3>
+        <p>Tell us your child's name, age, and your contact info. It takes under 2 minutes.</p>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Receive Your Confirmation Email</h3>
+        <p>We'll send you an email right away with your spot confirmation and our Venmo info to complete payment.</p>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Send Payment & You're In!</h3>
+        <p>Pay via Venmo to secure your child's spot. Then show up ready to learn, play, and grow! 🎉</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPORTANT INFO -->
+<section id="info">
+  <div class="section-label">Good to Know</div>
+  <h2 class="fade-in">A Few Important Details</h2>
+  <div class="info-grid">
+    <div class="info-item fade-in">
+      <div class="info-icon">⏰</div>
+      <div>
+        <h4>Class Times</h4>
+        <p>All classes run 10:30 AM – 1:30 PM. Please plan to pick up promptly at 1:30 PM.</p>
+      </div>
+    </div>
+    <div class="info-item fade-in">
+      <div class="info-icon">🍎</div>
+      <div>
+        <h4>Please Bring a Snack & Lunch</h4>
+        <p>There is a lunch break during class. Please pack a small, healthy lunch and/or snack for your child each day.</p>
+      </div>
+    </div>
+    <div class="info-item fade-in">
+      <div class="info-icon">👶</div>
+      <div>
+        <h4>Age Groups</h4>
+        <p>Monday &amp; Wednesday classes are for ages 3–6. Friday classes are for ages 7–8.</p>
+      </div>
+    </div>
+    <div class="info-item fade-in">
+      <div class="info-icon">🔟</div>
+      <div>
+        <h4>Limited Spots</h4>
+        <p>Each class holds a maximum of 10 children to ensure every child gets the attention they deserve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section id="cta-banner">
+  <h2 class="fade-in">Ready to Give Your Child a Bright Future? 🌟</h2>
+  <p class="fade-in">Spots fill up fast — reserve your child's place today and watch them grow, learn, and thrive.</p>
+  <button class="btn-white fade-in" onclick="openModal()">Reserve a Spot Now →</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Bright Futures Growing Minds LLC</strong><br />
+  Enrichment Classes for Kids Ages 3–8<br />
+  <a href="mailto:Brightfuturesgrowingmindsllc@gmail.com" style="color:var(--sun)">
+  Brightfuturesgrowingmindsllc@gmail.com
+</a>
+  <span style="font-size:.8rem;opacity:.5;margin-top:8px;display:block">© 2026 Bright Futures Growing Minds LLC. All rights reserved.</span>
+</footer>
+
+<!-- SIGNUP MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="formContainer">
+      <h2>🌟 Reserve a Spot</h2>
+      <p class="modal-sub">Fill out the form below. You'll receive a confirmation email with payment instructions right away.</p>
+      <div class="error-msg" id="errorMsg"></div>
+      <form id="signupForm" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Parent / Guardian First Name *</label>
+            <input type="text" name="parentFirst" required placeholder="Jane" />
+          </div>
+          <div class="form-group">
+            <label>Last Name *</label>
+            <input type="text" name="parentLast" required placeholder="Smith" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" name="email" required placeholder="jane@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" placeholder="(555) 000-0000" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Child's First Name *</label>
+            <input type="text" name="childFirst" required placeholder="Alex" />
+          </div>
+          <div class="form-group">
+            <label>Child's Age *</label>
+            <input type="number" name="childAge" required min="3" max="8" placeholder="5" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Class Day *</label>
+          <select name="classDay" id="classDaySelect" required onchange="updatePackageOptions()">
+            <option value="">— Select a day —</option>
+            <option value="monday">Monday (Ages 3–6)</option>
+            <option value="wednesday">Wednesday (Ages 3–6)</option>
+            <option value="friday">Friday (Ages 7–8)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Package *</label>
+          <select name="package" required>
+            <option value="">— Select a package —</option>
+            <option value="single">Single Class — $40</option>
+            <option value="3class">3-Class Package — $80</option>
+            <option value="4class">4-Class Package — $140</option>
+          </select>
+        </div>
+        <div class="form-notice">
+          💳 <strong>Payment via Venmo.</strong> After you submit, you'll receive an email with our Venmo handle and the amount due to fully secure your spot.
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">Reserve My Spot 🎉</button>
+      </form>
+    </div>
+    <div class="success-state" id="successState" style="display:none">
+      <div class="success-icon">🎉</div>
+      <h3>You're Almost In!</h3>
+      <p>Check your inbox — we've sent a confirmation email with our Venmo details so you can secure your child's spot.<br><br>We can't wait to meet your little one! 🌟</p>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ─── CONFIG ───────────────────────────────────────────────────
+  // These are set via environment on Vercel — no secrets in frontend
+  const API_BASE = ''; // same origin on Vercel
+
+  // ─── SPOTS STATE (fetched from API) ───────────────────────────
+  let spots = { monday: 10, wednesday: 10, friday: 10 };
+
+  const DAYS = [
+    { key: 'monday',    label: 'Monday',    cls: 'monday',    ages: 'Ages 3–6', emoji: '☀️' },
+    { key: 'wednesday', label: 'Wednesday', cls: 'wednesday', ages: 'Ages 3–6', emoji: '🌈' },
+    { key: 'friday',    label: 'Friday',    cls: 'friday',    ages: 'Ages 7–8', emoji: '⭐' },
+  ];
+
+  // ─── RENDER SCHEDULE CARDS ────────────────────────────────────
+  function renderSchedule() {
+    const grid = document.getElementById('scheduleGrid');
+    grid.innerHTML = DAYS.map(d => {
+      const remaining = spots[d.key];
+      const pct = (remaining / 10) * 100;
+      const full = remaining <= 0;
+      return `
+        <div class="day-card ${d.cls}">
+          <div class="day-name">${d.emoji} ${d.label}</div>
+          <div class="day-ages">${d.ages}</div>
+          <div class="day-detail"><span class="icon">⏰</span><span>10:30 AM – 1:30 PM</span></div>
+          <div class="day-detail"><span class="icon">👶</span><span>${d.ages}</span></div>
+          <div class="day-detail"><span class="icon">👥</span><span>Max 10 children per class</span></div>
+          <div class="spots-bar"><div class="spots-fill" style="width:${pct}%"></div></div>
+          <div class="spots-label">${full ? '❌ Class Full' : `${remaining} of 10 spots remaining`}</div>
+          <button class="enroll-btn" onclick="openModal('${d.key}')" ${full ? 'disabled' : ''}>
+            ${full ? 'Class Full — Join Waitlist' : 'Reserve a Spot →'}
+          </button>
+        </div>`;
+    }).join('');
+  }
+
+  // ─── FETCH CURRENT SPOTS ──────────────────────────────────────
+  async function fetchSpots() {
+    try {
+      const res = await fetch(`${API_BASE}/api/spots`);
+      if (res.ok) {
+        const data = await res.json();
+        spots = data;
+      }
+    } catch (e) {
+      console.warn('Could not fetch live spots, using defaults');
+    }
+    renderSchedule();
+  }
+
+  // ─── MODAL LOGIC ──────────────────────────────────────────────
+  function openModal(day = '') {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('formContainer').style.display = 'block';
+    document.getElementById('successState').style.display = 'none';
+    document.getElementById('errorMsg').classList.remove('show');
+    if (day) {
+      document.getElementById('classDaySelect').value = day;
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ─── FORM SUBMIT ──────────────────────────────────────────────
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errDiv = document.getElementById('errorMsg');
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form));
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    errDiv.classList.remove('show');
+
+    try {
+      const res = await fetch(`${API_BASE}/api/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error || 'Something went wrong. Please try again.');
+      }
+
+      // Update spot count locally
+      if (spots[data.classDay] > 0) spots[data.classDay]--;
+      renderSchedule();
+
+      // Show success
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+
+    } catch (err) {
+      errDiv.textContent = err.message;
+      errDiv.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Reserve My Spot 🎉';
+    }
+  }
+
+  // ─── SCROLL FADE-IN ───────────────────────────────────────────
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+  // ──
+  // Make all fade-in elements visible immediately (fixes local file + first load)
+  document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+
+  // ─── INIT ─────────────────────────────────────────────────────
+  renderSchedule();
+  fetchSpots();
+  setInterval(fetchSpots, 60000);
+</script>
+</body>
+</html>
