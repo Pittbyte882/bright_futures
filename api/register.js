@@ -16,7 +16,7 @@ const VENMO_HANDLE = process.env.VENMO_HANDLE || '@BrightFuturesGrowingMinds'; /
 
 const PACKAGE_LABELS = {
   single:  { label: 'Single Class',     price: '$40'  },
-  '3class': { label: '3-Class Package', price: '$80'  },
+  '3class': { label: '3-Class Package', price: '$110'  },
   '4class': { label: '4-Class Package', price: '$140' },
 };
 
