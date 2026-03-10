@@ -51,7 +51,10 @@
     }
 
     /* ─── NAV ─── */
-    
+    .nav-links { display:flex; align-items:center; gap:4px; }
+    .nav-links a { font-size:0.9rem; font-weight:700; color:var(--body); text-decoration:none; padding:7px 14px; border-radius:50px; transition:background .2s,color .2s; }
+    .nav-links a:hover { background:var(--peach); color:var(--dark); }
+    .nav-links a.active { background:var(--sun); color:var(--dark); }
     nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
