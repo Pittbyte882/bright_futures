@@ -268,39 +268,65 @@
   drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
 
   async function submitGallery() {
-    const name = document.getElementById('submitterName').value.trim();
-    const caption = document.getElementById('submitterCaption').value.trim();
-    const category = document.getElementById('submitterCategory').value;
-    const btn = document.getElementById('submitGalleryBtn');
-    const errDiv = document.getElementById('errorMsg');
-    const successDiv = document.getElementById('successMsg');
-    errDiv.classList.remove('show');
-    if (!name) { errDiv.textContent = 'Please enter your name.'; errDiv.classList.add('show'); return; }
-    if (selectedFiles.length === 0) { errDiv.textContent = 'Please select at least one photo or video.'; errDiv.classList.add('show'); return; }
-    btn.disabled = true;
-    btn.textContent = 'Uploading...';
-    try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('caption', caption);
-      formData.append('category', category);
-      selectedFiles.forEach(f => formData.append('files', f));
-      const res = await fetch('/api/gallery-submit', { method: 'POST', body: formData });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || 'Upload failed. Please try again.');
-      successDiv.classList.add('show');
-      document.getElementById('submitterName').value = '';
-      document.getElementById('submitterCaption').value = '';
-      document.getElementById('filePreview').innerHTML = '';
-      selectedFiles = [];
-    } catch(err) {
-      errDiv.textContent = err.message;
-      errDiv.classList.add('show');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Submit for Review 📸';
+  const name = document.getElementById('submitterName').value.trim();
+  const caption = document.getElementById('submitterCaption').value.trim();
+  const category = document.getElementById('submitterCategory').value;
+  const btn = document.getElementById('submitGalleryBtn');
+  const errDiv = document.getElementById('errorMsg');
+  const successDiv = document.getElementById('successMsg');
+
+  errDiv.classList.remove('show');
+  if (!name) { errDiv.textContent = 'Please enter your name.'; errDiv.classList.add('show'); return; }
+  if (selectedFiles.length === 0) { errDiv.textContent = 'Please select at least one photo or video.'; errDiv.classList.add('show'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Uploading...';
+
+  try {
+    // Step 1 — get Supabase credentials
+    const tokenRes = await fetch('/api/storage-token');
+    const { url, anonKey } = await tokenRes.json();
+
+    // Step 2 — upload files directly to Supabase from browser
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+    const sb = createClient(url, anonKey);
+    const mediaItems = [];
+
+    for (const file of selectedFiles) {
+      const ext = file.name.split('.').pop();
+      const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: upErr } = await sb.storage.from('media').upload(path, file, { contentType: file.type });
+      if (!upErr) {
+        const { data: urlData } = sb.storage.from('media').getPublicUrl(path);
+        mediaItems.push({ url: urlData.publicUrl, type: file.type.startsWith('video') ? 'video' : 'image' });
+      }
     }
+
+    if (!mediaItems.length) throw new Error('All file uploads failed. Check your Supabase storage bucket.');
+
+    // Step 3 — send just URLs to our API
+    const res = await fetch('/api/gallery-submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, caption, category, mediaItems })
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Submission failed.');
+
+    successDiv.classList.add('show');
+    document.getElementById('submitterName').value = '';
+    document.getElementById('submitterCaption').value = '';
+    document.getElementById('filePreview').innerHTML = '';
+    selectedFiles = [];
+
+  } catch(err) {
+    errDiv.textContent = err.message;
+    errDiv.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit for Review 📸';
   }
+}
 
   loadGallery();
 </script>

@@ -21,6 +21,7 @@
     { "src": "/gallery.html",             "dest": "/gallery.html" },
     { "src": "/testimonials.html",        "dest": "/testimonials.html" },
     { "src": "/",                         "dest": "/index.html" },
-    { "src": "/(.*)",                     "dest": "/index.html" }
+    { "src": "/(.*)",                     "dest": "/index.html" },
+    { "src": "/api/storage-token", "dest": "/api/storage-token.js" }
   ]
 }

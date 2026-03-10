@@ -275,43 +275,66 @@
   rfd.addEventListener('drop', e => { e.preventDefault(); rfd.classList.remove('dragover'); handleReviewFiles(e.dataTransfer.files); });
 
   async function submitReview() {
-    const name = document.getElementById('reviewName').value.trim();
-    const text = document.getElementById('reviewText').value.trim();
-    const ageGroup = document.getElementById('reviewAgeGroup').value;
-    const btn = document.getElementById('submitReviewBtn');
-    const errDiv = document.getElementById('errorMsg');
-    const successDiv = document.getElementById('successMsg');
-    errDiv.classList.remove('show');
-    if (!name) { errDiv.textContent = 'Please enter your name.'; errDiv.classList.add('show'); return; }
-    if (!selectedRating) { errDiv.textContent = 'Please select a star rating.'; errDiv.classList.add('show'); return; }
-    if (!text) { errDiv.textContent = 'Please write your review.'; errDiv.classList.add('show'); return; }
-    btn.disabled = true;
-    btn.textContent = 'Submitting...';
-    try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('rating', selectedRating);
-      formData.append('text', text);
-      formData.append('ageGroup', ageGroup);
-      reviewFiles.forEach(f => formData.append('files', f));
-      const res = await fetch('/api/submit-testimonial', { method: 'POST', body: formData });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || 'Submission failed.');
-      successDiv.classList.add('show');
-      document.getElementById('reviewName').value = '';
-      document.getElementById('reviewText').value = '';
-      document.getElementById('reviewFilePreview').innerHTML = '';
-      reviewFiles = [];
-      selectedRating = 0;
-      document.querySelectorAll('.star-pick').forEach(s => s.classList.remove('selected'));
-    } catch(err) {
-      errDiv.textContent = err.message;
-      errDiv.classList.add('show');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Submit My Review 🌟';
+  const name = document.getElementById('reviewName').value.trim();
+  const text = document.getElementById('reviewText').value.trim();
+  const ageGroup = document.getElementById('reviewAgeGroup').value;
+  const btn = document.getElementById('submitReviewBtn');
+  const errDiv = document.getElementById('errorMsg');
+  const successDiv = document.getElementById('successMsg');
+
+  errDiv.classList.remove('show');
+  if (!name) { errDiv.textContent = 'Please enter your name.'; errDiv.classList.add('show'); return; }
+  if (!selectedRating) { errDiv.textContent = 'Please select a star rating.'; errDiv.classList.add('show'); return; }
+  if (!text) { errDiv.textContent = 'Please write your review.'; errDiv.classList.add('show'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Uploading...';
+
+  try {
+    // Step 1 — get Supabase credentials
+    const tokenRes = await fetch('/api/storage-token');
+    const { url, anonKey } = await tokenRes.json();
+
+    // Step 2 — upload files directly to Supabase from browser
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+    const sb = createClient(url, anonKey);
+    const mediaUrls = [];
+
+    for (const file of reviewFiles) {
+      const ext = file.name.split('.').pop();
+      const path = `testimonials/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: upErr } = await sb.storage.from('media').upload(path, file, { contentType: file.type });
+      if (!upErr) {
+        const { data: urlData } = sb.storage.from('media').getPublicUrl(path);
+        mediaUrls.push(urlData.publicUrl);
+      }
     }
+
+    // Step 3 — send just the text data + URLs to our API
+    const res = await fetch('/api/submit-testimonial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, rating: selectedRating, text, ageGroup, mediaUrls })
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Submission failed.');
+
+    successDiv.classList.add('show');
+    document.getElementById('reviewName').value = '';
+    document.getElementById('reviewText').value = '';
+    document.getElementById('reviewFilePreview').innerHTML = '';
+    reviewFiles = [];
+    selectedRating = 0;
+    document.querySelectorAll('.star-pick').forEach(s => s.classList.remove('selected'));
+
+  } catch(err) {
+    errDiv.textContent = err.message;
+    errDiv.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit My Review 🌟';
   }
+}
 
   function openLb(url, type) {
     const lb = document.getElementById('lightbox');
