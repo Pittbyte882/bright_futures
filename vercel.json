@@ -16,6 +16,11 @@
     { "src": "/about",                    "dest": "/about.html" },
     { "src": "/gallery",                  "dest": "/gallery.html" },
     { "src": "/testimonials",             "dest": "/testimonials.html" },
+    { "src": "/admin.html",               "dest": "/admin.html" },
+    { "src": "/about.html",               "dest": "/about.html" },
+    { "src": "/gallery.html",             "dest": "/gallery.html" },
+    { "src": "/testimonials.html",        "dest": "/testimonials.html" },
+    { "src": "/",                         "dest": "/index.html" },
     { "src": "/(.*)",                     "dest": "/index.html" }
   ]
 }
