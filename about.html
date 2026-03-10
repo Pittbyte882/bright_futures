@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Bright Futures Growing Minds LLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sun:#FFD23F; --coral:#FF6B6B; --sky:#4ECDC4; --leaf:#6BCB77;
+      --berry:#845EC2; --peach:#FFF0E6; --cream:#FFFBF2; --dark:#1A1A2E;
+      --body:#3D3D5C; --card:#FFFFFF; --radius:20px;
+      --shadow:0 8px 40px rgba(26,26,46,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Nunito',sans-serif; background:var(--cream); color:var(--body); overflow-x:hidden; }
+    nav { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 40px; background:rgba(255,251,242,0.95); backdrop-filter:blur(12px); border-bottom:2px solid rgba(255,210,63,0.3); }
+    .nav-logo { font-family:'Fredoka',sans-serif; font-size:1.2rem; font-weight:700; color:var(--dark); line-height:1.2; text-decoration:none; flex-shrink:0; }
+    .nav-logo span { color:var(--coral); }
+    .nav-links { display:flex; align-items:center; gap:4px; }
+    .nav-links a { font-size:0.9rem; font-weight:700; color:var(--body); text-decoration:none; padding:7px 14px; border-radius:50px; transition:background .2s,color .2s; }
+    .nav-links a:hover { background:var(--peach); color:var(--dark); }
+    .nav-links a.active { background:var(--sun); color:var(--dark); }
+    .nav-cta { background:var(--coral); color:#fff; border:none; border-radius:50px; padding:10px 22px; font-family:'Nunito',sans-serif; font-size:0.95rem; font-weight:800; cursor:pointer; text-decoration:none; transition:transform .2s,box-shadow .2s; box-shadow:0 4px 16px rgba(255,107,107,0.35); }
+    .nav-cta:hover { transform:translateY(-2px); }
+    .page-hero { background:linear-gradient(135deg,#1A1A2E 0%,#16213E 100%); padding:100px 40px 80px; text-align:center; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 25% 50%,rgba(255,210,63,0.12) 0%,transparent 55%),radial-gradient(circle at 75% 50%,rgba(78,205,196,0.08) 0%,transparent 55%); }
+    .page-hero-content { position:relative; z-index:1; max-width:640px; margin:0 auto; }
+    .badge { display:inline-block; background:var(--sun); color:var(--dark); border-radius:50px; padding:6px 18px; font-size:0.85rem; font-weight:800; margin-bottom:20px; }
+    .page-hero h1 { font-family:'Fredoka',sans-serif; font-size:clamp(2.4rem,5vw,3.8rem); font-weight:700; color:#fff; line-height:1.15; margin-bottom:20px; }
+    .page-hero h1 em { color:var(--sun); font-style:normal; }
+    .page-hero p { font-size:1.1rem; color:rgba(255,255,255,0.75); line-height:1.75; }
+    section { padding:80px 40px; }
+    .section-label { display:inline-block; background:var(--sun); color:var(--dark); border-radius:50px; padding:6px 18px; font-size:0.85rem; font-weight:800; margin-bottom:16px; }
+    h2 { font-family:'Fredoka',sans-serif; font-size:clamp(1.9rem,3.5vw,2.7rem); color:var(--dark); font-weight:700; line-height:1.2; margin-bottom:16px; }
+    #mission { background:var(--cream); }
+    .mission-wrap { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; margin-top:48px; }
+    .mission-text p { font-size:1.05rem; line-height:1.85; margin-bottom:18px; }
+    .mission-quote { background:var(--dark); border-radius:var(--radius); padding:44px 40px; position:relative; overflow:hidden; }
+    .mission-quote::before { content:'"'; font-family:'Fredoka',sans-serif; font-size:10rem; line-height:1; color:var(--sun); opacity:0.1; position:absolute; top:-24px; left:16px; pointer-events:none; }
+    .mission-quote blockquote { font-family:'Fredoka',sans-serif; font-size:1.45rem; color:#fff; line-height:1.55; position:relative; z-index:1; }
+    .mission-quote cite { display:block; margin-top:20px; font-size:0.88rem; color:var(--sun); font-style:normal; font-weight:800; }
+    #values { background:var(--peach); }
+    .values-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:20px; margin-top:48px; }
+    .value-card { background:var(--card); border-radius:var(--radius); padding:32px 24px; text-align:center; box-shadow:var(--shadow); border-bottom:5px solid transparent; transition:transform .3s,box-shadow .3s; }
+    .value-card:nth-child(1){border-color:var(--coral);} .value-card:nth-child(2){border-color:var(--sky);} .value-card:nth-child(3){border-color:var(--leaf);} .value-card:nth-child(4){border-color:var(--sun);}
+    .value-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(26,26,46,0.16); }
+    .value-emoji { font-size:2.8rem; margin-bottom:14px; }
+    .value-card h3 { font-family:'Fredoka',sans-serif; font-size:1.2rem; color:var(--dark); margin-bottom:8px; }
+    .value-card p { font-size:0.9rem; color:#666; line-height:1.6; }
+    #story { background:var(--cream); }
+    .story-wrap { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; margin-top:48px; }
+    .story-text p { font-size:1.05rem; line-height:1.85; margin-bottom:18px; }
+    .highlights { display:flex; flex-direction:column; gap:16px; }
+    .highlight { display:flex; gap:16px; align-items:flex-start; background:var(--card); border-radius:16px; padding:22px; box-shadow:0 4px 20px rgba(26,26,46,0.07); }
+    .h-icon { width:50px; height:50px; border-radius:14px; background:var(--peach); display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; }
+    .highlight h4 { font-family:'Fredoka',sans-serif; font-size:1.05rem; color:var(--dark); margin-bottom:4px; }
+    .highlight p { font-size:0.88rem; color:#666; line-height:1.55; }
+    #team { background:var(--dark); }
+    #team h2 { color:#fff; }
+    #team .section-label { background:var(--sun); }
+    .team-sub { color:rgba(255,255,255,0.65); font-size:1rem; max-width:500px; line-height:1.75; margin-bottom:48px; }
+    .team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:24px; }
+    .team-card { background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.1); border-radius:var(--radius); padding:36px 28px; text-align:center; transition:border-color .3s,transform .3s; }
+    .team-card:hover { border-color:var(--sun); transform:translateY(-4px); }
+    .avatar { width:88px; height:88px; border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:2.4rem; }
+    .av-coral{background:linear-gradient(135deg,var(--coral),#FF9A6C);} .av-sky{background:linear-gradient(135deg,var(--sky),#44A9B0);} .av-leaf{background:linear-gradient(135deg,var(--leaf),#45A053);}
+    .team-card h3 { font-family:'Fredoka',sans-serif; font-size:1.25rem; color:#fff; margin-bottom:4px; }
+    .team-card .role { color:var(--sun); font-size:0.85rem; font-weight:800; margin-bottom:12px; }
+    .team-card p { color:rgba(255,255,255,0.6); font-size:0.9rem; line-height:1.6; }
+    #about-cta { background:linear-gradient(135deg,var(--coral),#FF9A6C); padding:80px 40px; text-align:center; }
+    #about-cta h2 { color:#fff; margin-bottom:16px; }
+    #about-cta p { color:rgba(255,255,255,0.88); font-size:1.1rem; margin:0 auto 40px; max-width:480px; line-height:1.65; }
+    .btn-white { background:#fff; color:var(--coral); border:none; border-radius:50px; padding:16px 44px; font-family:'Nunito',sans-serif; font-size:1.1rem; font-weight:800; cursor:pointer; box-shadow:0 8px 28px rgba(0,0,0,0.15); transition:transform .2s,box-shadow .2s; text-decoration:none; display:inline-block; }
+    .btn-white:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(0,0,0,0.2); }
+    footer { background:var(--dark); padding:40px; text-align:center; color:rgba(255,255,255,0.5); font-size:0.9rem; line-height:1.8; }
+    footer strong { color:rgba(255,255,255,0.85); }
+    footer a { color:var(--sun); }
+    @media(max-width:768px){ nav{padding:14px 20px;} .nav-links{display:none;} section{padding:60px 20px;} .page-hero{padding:80px 20px 60px;} .mission-wrap,.story-wrap{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Bright Futures<br><span>Growing Minds LLC</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html" class="active">About</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="testimonials.html">Reviews</a>
+  </div>
+  <a class="nav-cta" href="index.html#schedule">Reserve a Spot 🌟</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <div class="badge">Our Story</div>
+    <h1>Building <em>Bright Futures</em>,<br>One Child at a Time</h1>
+    <p>We believe every child deserves a nurturing space to explore, create, and grow — surrounded by encouragement, laughter, and love for learning.</p>
+  </div>
+</div>
+
+<section id="mission">
+  <div class="section-label">Our Mission</div>
+  <div class="mission-wrap">
+    <div class="mission-text">
+      <h2>Why We Do What We Do</h2>
+      <p>At Bright Futures Growing Minds LLC, we are on a mission to provide every child ages 3–8 with enriching, hands-on learning experiences that build the foundation for a lifetime of curiosity and confidence.</p>
+      <p>We know that the early years are the most critical window for development. That's why every class we design is intentional — blending arts, STEM, music, sensory play, and social skill-building into a joyful, structured environment where children feel safe to be themselves.</p>
+      <p>Our small class sizes of just 10 children per session mean every child is seen, heard, and celebrated. We don't just teach — we inspire.</p>
+    </div>
+    <div class="mission-quote">
+      <blockquote>
+        "Every child is a bright future waiting to grow. Our job is to give them the soil, the sunshine, and the space to bloom."
+        <cite>— Bright Futures Growing Minds LLC</cite>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section id="values">
+  <div class="section-label">Our Values</div>
+  <h2>What We Stand For</h2>
+  <div class="values-grid">
+    <div class="value-card"><div class="value-emoji">💛</div><h3>Every Child Matters</h3><p>We see the unique spark in every child and create space for each one to shine at their own pace.</p></div>
+    <div class="value-card"><div class="value-emoji">🎨</div><h3>Learning Through Play</h3><p>Children learn best when they're having fun. Every activity is designed to educate and delight at the same time.</p></div>
+    <div class="value-card"><div class="value-emoji">🤝</div><h3>Community & Connection</h3><p>We build friendships, encourage teamwork, and create a community where children and families feel welcome.</p></div>
+    <div class="value-card"><div class="value-emoji">🌱</div><h3>Growth Mindset</h3><p>We celebrate effort over outcome and teach children that trying, failing, and trying again is how we grow.</p></div>
+  </div>
+</section>
+
+<section id="story">
+  <div class="section-label">Our Story</div>
+  <div class="story-wrap">
+    <div class="story-text">
+      <h2>How Bright Futures Began</h2>
+      <p>Bright Futures Growing Minds LLC was born from a deep passion for early childhood education and a belief that quality enrichment should be accessible, joyful, and community-centered.</p>
+      <p>We saw a need in our community for a warm, structured space where young children could explore their creativity, build early academic skills, and form friendships — all in a small, nurturing setting where every child gets real attention.</p>
+      <p>So we built it. And every Monday, Wednesday, and Friday, we get to watch children walk in curious and walk out glowing. That's what keeps us going.</p>
+    </div>
+    <div class="highlights">
+      <div class="highlight"><div class="h-icon">👶</div><div><h4>Ages 3–8</h4><p>Carefully designed programs for two distinct age groups — each tailored to where children are developmentally.</p></div></div>
+      <div class="highlight"><div class="h-icon">🔟</div><div><h4>Max 10 Per Class</h4><p>Small class sizes are non-negotiable. Every child deserves real attention, not just a seat in a crowd.</p></div></div>
+      <div class="highlight"><div class="h-icon">📅</div><div><h4>3 Days a Week</h4><p>Monday, Wednesday and Friday — flexible enough to fit your family's schedule while keeping consistency for kids.</p></div></div>
+      <div class="highlight"><div class="h-icon">❤️</div><div><h4>Built With Love</h4><p>This is not just a business — it's a calling. Every class is prepared with intention, care, and genuine love for children.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="section-label">Meet the Team</div>
+  <h2>The Faces Behind the Fun</h2>
+  <p class="team-sub">Our team is made up of passionate educators and child development enthusiasts who show up every day ready to pour into your children.</p>
+  <div class="team-grid">
+    <div class="team-card"><div class="avatar av-coral">👩🏽</div><h3>Founder &amp; Lead Educator</h3><div class="role">Founder · Early Childhood Specialist</div><p>With a heart for children and years of experience in early childhood education, our founder created Bright Futures to give every child the start they deserve.</p></div>
+    <div class="team-card"><div class="avatar av-sky">👩🏾</div><h3>Arts &amp; Crafts Lead</h3><div class="role">Creative Arts Educator</div><p>Bringing color, creativity, and joy to every session — our arts lead turns every project into a masterpiece and every child into an artist.</p></div>
+    <div class="team-card"><div class="avatar av-leaf">👩🏻</div><h3>STEM &amp; Sensory Lead</h3><div class="role">STEM Activity Coordinator</div><p>From science experiments to sensory bins, our STEM lead makes learning hands-on, exciting, and unforgettable for curious little minds.</p></div>
+  </div>
+</section>
+
+<section id="about-cta">
+  <h2>Ready to Join Our Community? 🌟</h2>
+  <p>Spots are limited to just 10 children per class. Reserve your child's place today and become part of the Bright Futures family.</p>
+  <a class="btn-white" href="index.html#schedule">Reserve a Spot →</a>
+</section>
+
+<footer>
+  <strong>Bright Futures Growing Minds LLC</strong><br/>
+  Enrichment Classes for Kids Ages 3–8<br/>
+  <a href="mailto:Brightfuturesgrowingmindsllc@gmail.com">Brightfuturesgrowingmindsllc@gmail.com</a><br/>
+  <span style="font-size:.8rem;opacity:.5;margin-top:8px;display:block">© 2026 Bright Futures Growing Minds LLC. All rights reserved.</span>
+</footer>
+</body>
+</html>

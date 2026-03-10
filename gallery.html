@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Bright Futures Growing Minds LLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sun:#FFD23F; --coral:#FF6B6B; --sky:#4ECDC4; --leaf:#6BCB77; --berry:#845EC2; --peach:#FFF0E6; --cream:#FFFBF2; --dark:#1A1A2E; --body:#3D3D5C; --card:#FFFFFF; --radius:20px; --shadow:0 8px 40px rgba(26,26,46,0.12); }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Nunito',sans-serif; background:var(--cream); color:var(--body); overflow-x:hidden; }
+    nav { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 40px; background:rgba(255,251,242,0.95); backdrop-filter:blur(12px); border-bottom:2px solid rgba(255,210,63,0.3); }
+    .nav-logo { font-family:'Fredoka',sans-serif; font-size:1.2rem; font-weight:700; color:var(--dark); line-height:1.2; text-decoration:none; flex-shrink:0; }
+    .nav-logo span { color:var(--coral); }
+    .nav-links { display:flex; align-items:center; gap:4px; }
+    .nav-links a { font-size:0.9rem; font-weight:700; color:var(--body); text-decoration:none; padding:7px 14px; border-radius:50px; transition:background .2s,color .2s; }
+    .nav-links a:hover { background:var(--peach); color:var(--dark); }
+    .nav-links a.active { background:var(--sun); color:var(--dark); }
+    .nav-cta { background:var(--coral); color:#fff; border:none; border-radius:50px; padding:10px 22px; font-family:'Nunito',sans-serif; font-size:0.95rem; font-weight:800; cursor:pointer; text-decoration:none; transition:transform .2s,box-shadow .2s; box-shadow:0 4px 16px rgba(255,107,107,0.35); }
+    .nav-cta:hover { transform:translateY(-2px); }
+    .page-hero { background:linear-gradient(135deg,#1A1A2E 0%,#0F3460 100%); padding:100px 40px 80px; text-align:center; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 50%,rgba(78,205,196,0.12) 0%,transparent 55%),radial-gradient(circle at 70% 50%,rgba(255,107,107,0.1) 0%,transparent 55%); }
+    .page-hero-content { position:relative; z-index:1; max-width:640px; margin:0 auto; }
+    .badge { display:inline-block; background:var(--sun); color:var(--dark); border-radius:50px; padding:6px 18px; font-size:0.85rem; font-weight:800; margin-bottom:20px; }
+    .page-hero h1 { font-family:'Fredoka',sans-serif; font-size:clamp(2.4rem,5vw,3.8rem); font-weight:700; color:#fff; line-height:1.15; margin-bottom:20px; }
+    .page-hero h1 em { color:var(--sky); font-style:normal; }
+    .page-hero p { font-size:1.1rem; color:rgba(255,255,255,0.75); line-height:1.75; }
+    section { padding:80px 40px; }
+    .section-label { display:inline-block; background:var(--sun); color:var(--dark); border-radius:50px; padding:6px 18px; font-size:0.85rem; font-weight:800; margin-bottom:16px; }
+    h2 { font-family:'Fredoka',sans-serif; font-size:clamp(1.9rem,3.5vw,2.7rem); color:var(--dark); font-weight:700; line-height:1.2; margin-bottom:16px; }
+    .filter-tabs { display:flex; gap:10px; flex-wrap:wrap; margin:32px 0; }
+    .filter-tab { background:var(--card); border:2px solid #E8E8F0; border-radius:50px; padding:9px 22px; font-family:'Nunito',sans-serif; font-size:0.9rem; font-weight:700; color:var(--body); cursor:pointer; transition:all .2s; }
+    .filter-tab:hover,.filter-tab.active { background:var(--dark); border-color:var(--dark); color:#fff; }
+    .gallery-grid { columns:3; column-gap:16px; }
+    .gallery-item { break-inside:avoid; margin-bottom:16px; border-radius:16px; overflow:hidden; position:relative; cursor:pointer; }
+    .gallery-item img,.gallery-item video { width:100%; display:block; border-radius:16px; transition:transform .3s; }
+    .gallery-item:hover img,.gallery-item:hover video { transform:scale(1.03); }
+    .gallery-item .media-type { position:absolute; top:10px; right:10px; background:rgba(26,26,46,0.75); color:#fff; border-radius:50px; padding:4px 12px; font-size:0.78rem; font-weight:700; }
+    .gallery-item .media-caption { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(26,26,46,0.85)); color:#fff; padding:24px 16px 14px; font-size:0.88rem; font-weight:600; opacity:0; transition:opacity .3s; border-radius:0 0 16px 16px; }
+    .gallery-item:hover .media-caption { opacity:1; }
+    .empty-state { text-align:center; padding:80px 40px; }
+    .empty-state .es-icon { font-size:4rem; margin-bottom:16px; }
+    .empty-state h3 { font-family:'Fredoka',sans-serif; font-size:1.6rem; color:var(--dark); margin-bottom:8px; }
+    .empty-state p { color:#888; font-size:1rem; }
+    .loading { text-align:center; padding:60px; color:#888; font-size:1rem; }
+    .spinner { width:40px; height:40px; border:4px solid var(--peach); border-top-color:var(--coral); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 16px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .lightbox { position:fixed; inset:0; z-index:2000; background:rgba(26,26,46,0.95); display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .lightbox.open { opacity:1; pointer-events:all; }
+    .lightbox-inner { max-width:900px; width:100%; position:relative; }
+    .lightbox img,.lightbox video { width:100%; border-radius:16px; max-height:80vh; object-fit:contain; }
+    .lightbox-close { position:absolute; top:-44px; right:0; background:rgba(255,255,255,0.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .lightbox-close:hover { background:rgba(255,255,255,0.3); }
+    #submit { background:var(--peach); }
+    .submit-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; margin-top:48px; }
+    .submit-info h3 { font-family:'Fredoka',sans-serif; font-size:1.5rem; color:var(--dark); margin-bottom:12px; }
+    .submit-info p { font-size:1rem; color:var(--body); line-height:1.7; margin-bottom:16px; }
+    .submit-rules { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .submit-rules li { display:flex; gap:10px; align-items:flex-start; font-size:0.9rem; color:var(--body); line-height:1.5; }
+    .submit-rules li span { font-size:1.1rem; flex-shrink:0; }
+    .submit-form { background:var(--card); border-radius:var(--radius); padding:36px 32px; box-shadow:var(--shadow); }
+    .form-group { margin-bottom:18px; }
+    .form-group label { display:block; font-size:0.88rem; font-weight:700; color:var(--dark); margin-bottom:6px; }
+    .form-group input,.form-group textarea { width:100%; padding:12px 16px; border:2px solid #E8E8F0; border-radius:12px; font-family:'Nunito',sans-serif; font-size:0.95rem; color:var(--dark); background:var(--cream); outline:none; transition:border-color .2s; }
+    .form-group input:focus,.form-group textarea:focus { border-color:var(--coral); }
+    .file-drop { border:3px dashed #E8E8F0; border-radius:16px; padding:32px; text-align:center; cursor:pointer; transition:border-color .2s,background .2s; position:relative; }
+    .file-drop:hover,.file-drop.dragover { border-color:var(--coral); background:var(--peach); }
+    .file-drop input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .file-drop .drop-icon { font-size:2rem; margin-bottom:8px; }
+    .file-drop p { font-size:0.88rem; color:#888; }
+    .file-drop strong { color:var(--coral); }
+    .file-preview { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .file-thumb { width:60px; height:60px; border-radius:10px; object-fit:cover; border:2px solid var(--peach); }
+    .submit-btn { width:100%; background:var(--coral); color:#fff; border:none; border-radius:50px; padding:14px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; margin-top:8px; box-shadow:0 6px 20px rgba(255,107,107,0.35); transition:transform .2s; }
+    .submit-btn:hover { transform:translateY(-2px); }
+    .submit-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .success-msg { background:var(--leaf); color:#fff; border-radius:12px; padding:14px 18px; margin-bottom:16px; font-weight:700; font-size:0.9rem; display:none; }
+    .success-msg.show { display:block; }
+    .error-msg { background:#FFE8E8; color:#CC2200; border-radius:12px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem; display:none; }
+    .error-msg.show { display:block; }
+    footer { background:var(--dark); padding:40px; text-align:center; color:rgba(255,255,255,0.5); font-size:0.9rem; line-height:1.8; }
+    footer strong { color:rgba(255,255,255,0.85); }
+    footer a { color:var(--sun); }
+    @media(max-width:768px){ nav{padding:14px 20px;} .nav-links{display:none;} section{padding:60px 20px;} .page-hero{padding:80px 20px 60px;} .gallery-grid{columns:2;} .submit-grid{grid-template-columns:1fr;} }
+    @media(max-width:480px){ .gallery-grid{columns:1;} }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Bright Futures<br><span>Growing Minds LLC</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="gallery.html" class="active">Gallery</a>
+    <a href="testimonials.html">Reviews</a>
+  </div>
+  <a class="nav-cta" href="index.html#schedule">Reserve a Spot 🌟</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <div class="badge">Photo &amp; Video Gallery</div>
+    <h1>See the <em>Magic</em><br>In Action</h1>
+    <p>A peek inside our enrichment classes — the creativity, the laughter, the learning, and the friendships being built every session.</p>
+  </div>
+</div>
+
+<section id="gallery">
+  <div class="section-label">Class Moments</div>
+  <h2>Life at Bright Futures</h2>
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterGallery('all',this)">All</button>
+    <button class="filter-tab" onclick="filterGallery('arts',this)">Arts &amp; Crafts</button>
+    <button class="filter-tab" onclick="filterGallery('stem',this)">STEM</button>
+    <button class="filter-tab" onclick="filterGallery('play',this)">Play &amp; Music</button>
+    <button class="filter-tab" onclick="filterGallery('social',this)">Social Skills</button>
+  </div>
+  <div id="galleryGrid" class="gallery-grid">
+    <div class="loading"><div class="spinner"></div>Loading gallery...</div>
+  </div>
+</section>
+
+<section id="submit">
+  <div class="section-label">Share Your Moments</div>
+  <div class="submit-grid">
+    <div class="submit-info">
+      <h3>📸 Share a Class Memory!</h3>
+      <p>Are you a Bright Futures parent? We'd love to feature your child's experience in our gallery! Submit your photos or videos below and our team will review and add them.</p>
+      <p>All submissions are reviewed before being published to ensure quality and appropriateness.</p>
+      <ul class="submit-rules">
+        <li><span>📷</span>Photos and videos of class activities are welcome</li>
+        <li><span>✅</span>Please make sure you have consent from other parents if other children are visible</li>
+        <li><span>📁</span>Accepted formats: JPG, PNG, MP4, MOV (max 50MB)</li>
+        <li><span>⏱️</span>We review and approve submissions within 24–48 hours</li>
+      </ul>
+    </div>
+    <div class="submit-form">
+      <div class="success-msg" id="successMsg">🎉 Submitted! We'll review and post your media within 48 hours. Thank you!</div>
+      <div class="error-msg" id="errorMsg"></div>
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="submitterName" placeholder="Jane Smith" required />
+      </div>
+      <div class="form-group">
+        <label>Caption (optional)</label>
+        <input type="text" id="submitterCaption" placeholder="e.g. Arts &amp; crafts day was a blast!" />
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="submitterCategory" style="width:100%;padding:12px 16px;border:2px solid #E8E8F0;border-radius:12px;font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--dark);background:var(--cream);outline:none;">
+          <option value="arts">Arts &amp; Crafts</option>
+          <option value="stem">STEM</option>
+          <option value="play">Play &amp; Music</option>
+          <option value="social">Social Skills</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Upload Photos or Videos *</label>
+        <div class="file-drop" id="fileDrop">
+          <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="handleFiles(this.files)" />
+          <div class="drop-icon">📁</div>
+          <p>Drag &amp; drop or <strong>click to browse</strong></p>
+          <p style="font-size:.8rem;margin-top:4px">JPG, PNG, MP4, MOV — max 50MB each</p>
+        </div>
+        <div class="file-preview" id="filePreview"></div>
+      </div>
+      <button class="submit-btn" id="submitGalleryBtn" onclick="submitGallery()">Submit for Review 📸</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Bright Futures Growing Minds LLC</strong><br/>
+  Enrichment Classes for Kids Ages 3–8<br/>
+  <a href="mailto:Brightfuturesgrowingmindsllc@gmail.com">Brightfuturesgrowingmindsllc@gmail.com</a><br/>
+  <span style="font-size:.8rem;opacity:.5;margin-top:8px;display:block">© 2026 Bright Futures Growing Minds LLC. All rights reserved.</span>
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <div id="lightboxContent"></div>
+  </div>
+</div>
+
+<script>
+  let allMedia = [];
+  let selectedFiles = [];
+
+  async function loadGallery() {
+    try {
+      const res = await fetch('/api/gallery');
+      if (res.ok) { allMedia = await res.json(); }
+    } catch(e) { allMedia = []; }
+    renderGallery('all');
+  }
+
+  function renderGallery(filter) {
+    const grid = document.getElementById('galleryGrid');
+    const items = filter === 'all' ? allMedia : allMedia.filter(m => m.category === filter);
+    if (items.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="column-span:all"><div class="es-icon">📸</div><h3>Gallery Coming Soon!</h3><p>We're adding photos and videos of our classes. Check back soon — or submit your own below!</p></div>`;
+      grid.style.columns = '1';
+      return;
+    }
+    grid.style.columns = '';
+    grid.innerHTML = items.map((m,i) => `
+      <div class="gallery-item" onclick="openLightbox(${i})">
+        ${m.type === 'video'
+          ? `<video src="${m.url}" muted playsinline></video><div class="media-type">▶ Video</div>`
+          : `<img src="${m.url}" alt="${m.caption || 'Class moment'}" loading="lazy" />`}
+        ${m.caption ? `<div class="media-caption">${m.caption}</div>` : ''}
+      </div>`).join('');
+  }
+
+  function filterGallery(cat, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderGallery(cat);
+  }
+
+  function openLightbox(i) {
+    const m = allMedia[i];
+    const lb = document.getElementById('lightbox');
+    const content = document.getElementById('lightboxContent');
+    content.innerHTML = m.type === 'video'
+      ? `<video src="${m.url}" controls autoplay style="width:100%;border-radius:16px;max-height:80vh"></video>`
+      : `<img src="${m.url}" alt="${m.caption||''}" style="width:100%;border-radius:16px;max-height:80vh;object-fit:contain" />`;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('lightboxContent').innerHTML = '';
+  }
+
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
+  function handleFiles(files) {
+    selectedFiles = Array.from(files);
+    const preview = document.getElementById('filePreview');
+    preview.innerHTML = '';
+    selectedFiles.forEach(f => {
+      if (f.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.className = 'file-thumb';
+        img.src = URL.createObjectURL(f);
+        preview.appendChild(img);
+      } else {
+        const div = document.createElement('div');
+        div.className = 'file-thumb';
+        div.style.cssText = 'background:var(--dark);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;';
+        div.textContent = '▶';
+        preview.appendChild(div);
+      }
+    });
+  }
+
+  const drop = document.getElementById('fileDrop');
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+
+  async function submitGallery() {
+    const name = document.getElementById('submitterName').value.trim();
+    const caption = document.getElementById('submitterCaption').value.trim();
+    const category = document.getElementById('submitterCategory').value;
+    const btn = document.getElementById('submitGalleryBtn');
+    const errDiv = document.getElementById('errorMsg');
+    const successDiv = document.getElementById('successMsg');
+    errDiv.classList.remove('show');
+    if (!name) { errDiv.textContent = 'Please enter your name.'; errDiv.classList.add('show'); return; }
+    if (selectedFiles.length === 0) { errDiv.textContent = 'Please select at least one photo or video.'; errDiv.classList.add('show'); return; }
+    btn.disabled = true;
+    btn.textContent = 'Uploading...';
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('caption', caption);
+      formData.append('category', category);
+      selectedFiles.forEach(f => formData.append('files', f));
+      const res = await fetch('/api/gallery-submit', { method: 'POST', body: formData });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Upload failed. Please try again.');
+      successDiv.classList.add('show');
+      document.getElementById('submitterName').value = '';
+      document.getElementById('submitterCaption').value = '';
+      document.getElementById('filePreview').innerHTML = '';
+      selectedFiles = [];
+    } catch(err) {
+      errDiv.textContent = err.message;
+      errDiv.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit for Review 📸';
+    }
+  }
+
+  loadGallery();
+</script>
+</body>
+</html>

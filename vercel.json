@@ -1,17 +1,21 @@
 {
   "version": 2,
   "routes": [
-    {
-      "src": "/api/spots",
-      "dest": "/api/spots.js"
-    },
-    {
-      "src": "/api/register",
-      "dest": "/api/register.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/api/spots",                "dest": "/api/spots.js" },
+    { "src": "/api/register",             "dest": "/api/register.js" },
+    { "src": "/api/admin-login",          "dest": "/api/admin-login.js" },
+    { "src": "/api/admin-spots",          "dest": "/api/admin-spots.js" },
+    { "src": "/api/admin-registrations",  "dest": "/api/admin-registrations.js" },
+    { "src": "/api/admin-testimonials",   "dest": "/api/admin-testimonials.js" },
+    { "src": "/api/admin-gallery",        "dest": "/api/admin-gallery.js" },
+    { "src": "/api/testimonials",         "dest": "/api/testimonials.js" },
+    { "src": "/api/gallery",              "dest": "/api/gallery.js" },
+    { "src": "/api/submit-testimonial",   "dest": "/api/submit-testimonial.js" },
+    { "src": "/api/gallery-submit",       "dest": "/api/gallery-submit.js" },
+    { "src": "/admin",                    "dest": "/admin.html" },
+    { "src": "/about",                    "dest": "/about.html" },
+    { "src": "/gallery",                  "dest": "/gallery.html" },
+    { "src": "/testimonials",             "dest": "/testimonials.html" },
+    { "src": "/(.*)",                     "dest": "/index.html" }
   ]
 }

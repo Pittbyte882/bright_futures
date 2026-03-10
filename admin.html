@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Bright Futures Growing Minds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sun:#FFD23F; --coral:#FF6B6B; --sky:#4ECDC4; --leaf:#6BCB77; --berry:#845EC2; --peach:#FFF0E6; --cream:#FFFBF2; --dark:#1A1A2E; --body:#3D3D5C; --card:#FFFFFF; --radius:16px; --shadow:0 4px 24px rgba(26,26,46,0.1); --sidebar:260px; }
+    body { font-family:'Nunito',sans-serif; background:#F0F2F8; color:var(--body); min-height:100vh; }
+    .login-screen { position:fixed; inset:0; background:linear-gradient(135deg,var(--dark),#16213E); display:flex; align-items:center; justify-content:center; z-index:9999; }
+    .login-box { background:#fff; border-radius:24px; padding:48px 40px; width:100%; max-width:380px; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.3); }
+    .login-logo { font-family:'Fredoka',sans-serif; font-size:1.3rem; color:var(--dark); margin-bottom:4px; }
+    .login-logo span { color:var(--coral); }
+    .login-sub { font-size:0.85rem; color:#888; margin-bottom:32px; }
+    .login-box h2 { font-family:'Fredoka',sans-serif; font-size:1.8rem; color:var(--dark); margin-bottom:24px; }
+    .login-input { width:100%; padding:14px 16px; border:2px solid #E8E8F0; border-radius:12px; font-family:'Nunito',sans-serif; font-size:1rem; color:var(--dark); outline:none; margin-bottom:16px; transition:border-color .2s; }
+    .login-input:focus { border-color:var(--coral); }
+    .login-btn { width:100%; background:var(--coral); color:#fff; border:none; border-radius:50px; padding:14px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; transition:transform .2s; box-shadow:0 6px 20px rgba(255,107,107,0.35); }
+    .login-btn:hover { transform:translateY(-2px); }
+    .login-err { background:#FFE8E8; color:#CC2200; border-radius:10px; padding:10px 14px; font-size:0.88rem; margin-bottom:14px; display:none; }
+    .login-err.show { display:block; }
+    .app { display:none; min-height:100vh; }
+    .app.visible { display:flex; }
+    .sidebar { width:var(--sidebar); background:var(--dark); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
+    .sidebar-logo { padding:28px 24px 20px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .sidebar-logo .logo-text { font-family:'Fredoka',sans-serif; font-size:1.1rem; color:#fff; line-height:1.3; }
+    .sidebar-logo .logo-text span { color:var(--sun); }
+    .sidebar-logo .admin-badge { display:inline-block; background:var(--coral); color:#fff; border-radius:50px; padding:3px 10px; font-size:0.72rem; font-weight:800; margin-top:6px; }
+    .sidebar-nav { flex:1; padding:16px 0; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:12px 24px; color:rgba(255,255,255,0.6); font-size:0.92rem; font-weight:700; cursor:pointer; transition:background .2s,color .2s; border-left:3px solid transparent; }
+    .nav-item:hover { background:rgba(255,255,255,0.06); color:#fff; }
+    .nav-item.active { background:rgba(255,255,255,0.1); color:#fff; border-left-color:var(--sun); }
+    .nav-item .ni-icon { font-size:1.2rem; width:24px; text-align:center; }
+    .nav-badge { margin-left:auto; background:var(--coral); color:#fff; border-radius:50px; padding:2px 8px; font-size:0.72rem; font-weight:800; }
+    .sidebar-footer { padding:20px 24px; border-top:1px solid rgba(255,255,255,0.08); }
+    .logout-btn { width:100%; background:rgba(255,107,107,0.15); color:var(--coral); border:1px solid rgba(255,107,107,0.3); border-radius:50px; padding:10px; font-family:'Nunito',sans-serif; font-size:0.88rem; font-weight:800; cursor:pointer; transition:background .2s; }
+    .logout-btn:hover { background:rgba(255,107,107,0.25); }
+    .main { margin-left:var(--sidebar); flex:1; padding:32px; min-height:100vh; }
+    .page-title { font-family:'Fredoka',sans-serif; font-size:1.9rem; color:var(--dark); margin-bottom:4px; }
+    .page-sub { color:#888; font-size:0.9rem; margin-bottom:28px; }
+    .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:28px; }
+    .stat-card { background:var(--card); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); }
+    .stat-card .sc-label { font-size:0.82rem; color:#888; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+    .stat-card .sc-val { font-family:'Fredoka',sans-serif; font-size:2.2rem; color:var(--dark); font-weight:700; line-height:1; }
+    .stat-card .sc-sub { font-size:0.8rem; color:#aaa; margin-top:4px; }
+    .stat-card.coral .sc-val { color:var(--coral); }
+    .stat-card.sky .sc-val { color:var(--sky); }
+    .stat-card.leaf .sc-val { color:var(--leaf); }
+    .stat-card.sun .sc-val { color:#D4A017; }
+    .panel { background:var(--card); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow); margin-bottom:24px; }
+    .panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .panel-title { font-family:'Fredoka',sans-serif; font-size:1.3rem; color:var(--dark); }
+    .panel-action { background:var(--dark); color:#fff; border:none; border-radius:50px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:0.85rem; font-weight:800; cursor:pointer; transition:opacity .2s; }
+    .panel-action:hover { opacity:.85; }
+    .spots-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .spot-card { border-radius:16px; padding:24px; color:#fff; text-align:center; }
+    .spot-card.monday { background:linear-gradient(135deg,#FFD23F,#FFA62B); }
+    .spot-card.wednesday { background:linear-gradient(135deg,#4ECDC4,#44A9B0); }
+    .spot-card.friday { background:linear-gradient(135deg,#845EC2,#6A3FA8); }
+    .spot-day { font-family:'Fredoka',sans-serif; font-size:1.3rem; margin-bottom:4px; }
+    .spot-ages { font-size:0.78rem; background:rgba(255,255,255,0.25); border-radius:50px; padding:3px 10px; margin-bottom:16px; display:inline-block; font-weight:700; }
+    .spot-count { font-family:'Fredoka',sans-serif; font-size:3rem; font-weight:700; line-height:1; }
+    .spot-of { font-size:0.85rem; opacity:.8; margin-bottom:16px; }
+    .spot-controls { display:flex; align-items:center; justify-content:center; gap:12px; }
+    .spot-btn { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.25); border:none; color:#fff; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; font-weight:700; }
+    .spot-btn:hover { background:rgba(255,255,255,0.4); }
+    .spot-input { width:60px; text-align:center; background:rgba(255,255,255,0.2); border:2px solid rgba(255,255,255,0.4); border-radius:10px; color:#fff; font-family:'Fredoka',sans-serif; font-size:1.3rem; font-weight:700; padding:4px; outline:none; }
+    .spot-save { margin-top:12px; width:100%; background:rgba(255,255,255,0.9); color:var(--dark); border:none; border-radius:50px; padding:8px; font-family:'Nunito',sans-serif; font-size:0.85rem; font-weight:800; cursor:pointer; transition:background .2s; }
+    .spot-save:hover { background:#fff; }
+    .spot-bar-wrap { background:rgba(255,255,255,0.2); border-radius:50px; height:8px; margin-top:12px; overflow:hidden; }
+    .spot-bar { height:100%; background:#fff; border-radius:50px; transition:width .4s; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; }
+    th { text-align:left; padding:10px 14px; font-size:0.8rem; color:#888; font-weight:800; text-transform:uppercase; letter-spacing:.4px; border-bottom:2px solid #F0F2F8; }
+    td { padding:12px 14px; font-size:0.88rem; border-bottom:1px solid #F0F2F8; vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#FAFAFA; }
+    .badge-paid { background:#D4EDDA; color:#155724; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
+    .badge-unpaid { background:#FFE8E8; color:#CC2200; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; cursor:pointer; }
+    .badge-pending { background:#FFF3CD; color:#856404; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
+    .badge-approved { background:#D4EDDA; color:#155724; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
+    .badge-day { border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
+    .badge-monday { background:#FFF8DC; color:#8B6914; }
+    .badge-wednesday { background:#E0F7F5; color:#00695C; }
+    .badge-friday { background:#F3E5FF; color:#6A1B9A; }
+    .action-btn { border:none; border-radius:8px; padding:6px 12px; font-family:'Nunito',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:opacity .2s; }
+    .action-btn:hover { opacity:.8; }
+    .btn-approve { background:var(--leaf); color:#fff; }
+    .btn-reject { background:var(--coral); color:#fff; }
+    .btn-delete { background:#FFE8E8; color:var(--coral); }
+    .review-preview { font-size:0.85rem; color:#555; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .review-stars { color:var(--sun); font-size:0.9rem; }
+    .media-thumb { width:40px; height:40px; border-radius:8px; object-fit:cover; }
+    .tab-bar { display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid #F0F2F8; padding-bottom:0; }
+    .tab { padding:10px 20px; font-size:0.9rem; font-weight:700; color:#888; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:color .2s,border-color .2s; }
+    .tab:hover { color:var(--dark); }
+    .tab.active { color:var(--dark); border-bottom-color:var(--coral); }
+    .admin-page { display:none; }
+    .admin-page.active { display:block; }
+    .upload-zone { border:3px dashed #E0E0E0; border-radius:16px; padding:40px; text-align:center; cursor:pointer; transition:all .2s; position:relative; background:var(--cream); }
+    .upload-zone:hover { border-color:var(--coral); background:var(--peach); }
+    .upload-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .upload-zone .uz-icon { font-size:2.5rem; margin-bottom:10px; }
+    .upload-zone p { color:#888; font-size:0.9rem; }
+    .upload-zone strong { color:var(--coral); }
+    .toast { position:fixed; bottom:24px; right:24px; background:var(--dark); color:#fff; border-radius:12px; padding:14px 20px; font-size:0.9rem; font-weight:700; z-index:9000; transform:translateY(80px); opacity:0; transition:all .3s; max-width:320px; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { background:var(--leaf); }
+    .toast.error { background:var(--coral); }
+    @media(max-width:768px){ .sidebar{transform:translateX(-100%);} .main{margin-left:0;padding:20px;} }
+  </style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Bright Futures<br><span>Growing Minds LLC</span></div>
+    <div class="login-sub">Admin Dashboard</div>
+    <h2>🔐 Sign In</h2>
+    <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
+    <input class="login-input" type="password" id="loginPass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">Bright Futures<br><span>Growing Minds</span></div>
+      <div class="admin-badge">ADMIN</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showPage('dashboard')"><span class="ni-icon">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="showPage('spots')"><span class="ni-icon">📅</span>Class Spots</div>
+      <div class="nav-item" onclick="showPage('registrations')"><span class="ni-icon">👨‍👩‍👧</span>Registrations</div>
+      <div class="nav-item" onclick="showPage('reviews')"><span class="ni-icon">⭐</span>Reviews <span class="nav-badge" id="pendingReviewsBadge" style="display:none">0</span></div>
+      <div class="nav-item" onclick="showPage('gallery')"><span class="ni-icon">📸</span>Gallery <span class="nav-badge" id="pendingGalleryBadge" style="display:none">0</span></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="admin-page active" id="page-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub" id="dashDate">Welcome back!</div>
+      <div class="stats-row">
+        <div class="stat-card coral"><div class="sc-label">Total Registrations</div><div class="sc-val" id="ds-total">—</div><div class="sc-sub">All time</div></div>
+        <div class="stat-card leaf"><div class="sc-label">Paid</div><div class="sc-val" id="ds-paid">—</div><div class="sc-sub">Confirmed</div></div>
+        <div class="stat-card sun"><div class="sc-label">Unpaid</div><div class="sc-val" id="ds-unpaid">—</div><div class="sc-sub">Awaiting payment</div></div>
+        <div class="stat-card sky"><div class="sc-label">Pending Reviews</div><div class="sc-val" id="ds-reviews">—</div><div class="sc-sub">Awaiting approval</div></div>
+        <div class="stat-card"><div class="sc-label">Pending Gallery</div><div class="sc-val" id="ds-gallery">—</div><div class="sc-sub">Awaiting approval</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📅 Spots Overview</div></div>
+        <div class="spots-grid" id="dashSpotsGrid">Loading...</div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">🆕 Recent Registrations</div><button class="panel-action" onclick="showPage('registrations')">View All</button></div>
+        <div class="table-wrap"><table id="recentRegTable"><tr><td style="color:#888;padding:20px">Loading...</td></tr></table></div>
+      </div>
+    </div>
+
+    <div class="admin-page" id="page-spots">
+      <div class="page-title">Class Spots</div>
+      <div class="page-sub">Adjust available spots per class day. Changes take effect immediately on the live site.</div>
+      <div class="panel">
+        <div class="spots-grid" id="spotsGrid">Loading...</div>
+      </div>
+      <div class="panel" style="margin-top:0">
+        <div class="panel-header"><div class="panel-title">⚡ Quick Actions</div></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="panel-action" style="background:var(--leaf)" onclick="resetAllSpots(10)">Reset All to 10</button>
+          <button class="panel-action" style="background:var(--sky)" onclick="resetAllSpots(0)">Set All to 0 (Sold Out)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-page" id="page-registrations">
+      <div class="page-title">Registrations</div>
+      <div class="page-sub">Manage all class sign-ups. Click "Mark Paid" when you receive Venmo payment.</div>
+      <div class="panel">
+        <div class="tab-bar">
+          <div class="tab active" onclick="filterRegs('all',this)">All</div>
+          <div class="tab" onclick="filterRegs('unpaid',this)">Unpaid</div>
+          <div class="tab" onclick="filterRegs('paid',this)">Paid</div>
+          <div class="tab" onclick="filterRegs('monday',this)">Monday</div>
+          <div class="tab" onclick="filterRegs('wednesday',this)">Wednesday</div>
+          <div class="tab" onclick="filterRegs('friday',this)">Friday</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Parent</th><th>Child</th><th>Day</th><th>Package</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="regTableBody"><tr><td colspan="7" style="color:#888;padding:20px">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-page" id="page-reviews">
+      <div class="page-title">Reviews & Testimonials</div>
+      <div class="page-sub">Approve or reject parent-submitted reviews before they appear on the public site.</div>
+      <div class="panel">
+        <div class="tab-bar">
+          <div class="tab active" onclick="filterTestimonials('pending',this)">Pending</div>
+          <div class="tab" onclick="filterTestimonials('approved',this)">Approved</div>
+          <div class="tab" onclick="filterTestimonials('all',this)">All</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Rating</th><th>Review</th><th>Media</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="reviewTableBody"><tr><td colspan="7" style="color:#888;padding:20px">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-page" id="page-gallery">
+      <div class="page-title">Gallery Management</div>
+      <div class="page-sub">Upload class photos/videos as owner, and approve parent submissions.</div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📤 Upload New Media</div></div>
+        <div class="upload-zone" id="adminUploadZone">
+          <input type="file" id="adminFileInput" accept="image/*,video/*" multiple onchange="handleAdminUpload(this.files)" />
+          <div class="uz-icon">📁</div>
+          <p>Drag &amp; drop or <strong>click to upload</strong> class photos and videos</p>
+          <p style="font-size:.8rem;margin-top:4px;color:#bbb">JPG, PNG, MP4, MOV — max 50MB each</p>
+        </div>
+        <div id="adminUploadPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"></div>
+        <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <input id="adminCaption" placeholder="Caption (optional)" style="flex:1;min-width:200px;padding:10px 14px;border:2px solid #E8E8F0;border-radius:10px;font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none" />
+          <select id="adminCategory" style="padding:10px 14px;border:2px solid #E8E8F0;border-radius:10px;font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none">
+            <option value="arts">Arts &amp; Crafts</option>
+            <option value="stem">STEM</option>
+            <option value="play">Play &amp; Music</option>
+            <option value="social">Social Skills</option>
+            <option value="other">Other</option>
+          </select>
+          <button class="panel-action" style="background:var(--coral)" onclick="uploadAdminMedia()">Upload &amp; Publish 📸</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📋 Parent Submissions</div></div>
+        <div class="tab-bar">
+          <div class="tab active" onclick="filterGalleryAdmin('pending',this)">Pending</div>
+          <div class="tab" onclick="filterGalleryAdmin('approved',this)">Approved</div>
+          <div class="tab" onclick="filterGalleryAdmin('all',this)">All</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Submitted By</th><th>Caption</th><th>Media</th><th>Category</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="galleryTableBody"><tr><td colspan="7" style="color:#888;padding:20px">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let isAuthed = false;
+  let allRegs = [], allTestimonials = [], allGallery = [], currentSpots = {};
+  let adminFiles = [];
+
+  async function doLogin() {
+    const pass = document.getElementById('loginPass').value;
+    const err = document.getElementById('loginErr');
+    err.classList.remove('show');
+    try {
+      const res = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({password: pass})
+      });
+      if (!res.ok) { err.classList.add('show'); return; }
+      isAuthed = true;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      document.getElementById('dashDate').textContent = 'Today is ' + new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+      loadAll();
+    } catch { err.classList.add('show'); }
+  }
+
+  document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+  function logout() {
+    fetch('/api/admin-login', {method:'DELETE'});
+    location.reload();
+  }
+
+  function showPage(name) {
+    document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if(n.textContent.trim().toLowerCase().startsWith(name === 'dashboard' ? 'dash' : name.slice(0,4))) n.classList.add('active');
+    });
+    if (name === 'registrations') renderRegistrations(allRegs);
+    if (name === 'reviews') renderTestimonials(allTestimonials.filter(t => t.status === 'pending'));
+    if (name === 'gallery') renderGalleryAdmin(allGallery.filter(g => g.status === 'pending' && g.source === 'parent'));
+    if (name === 'spots') renderSpots(currentSpots, 'spotsGrid');
+  }
+
+  async function loadAll() {
+    await Promise.all([loadSpots(), loadRegistrations(), loadTestimonials(), loadGalleryAdmin()]);
+    updateDashboard();
+  }
+
+  async function loadSpots() {
+    try {
+      const res = await fetch('/api/spots');
+      if (res.ok) currentSpots = await res.json();
+    } catch {}
+    renderSpots(currentSpots, 'dashSpotsGrid');
+  }
+
+  async function loadRegistrations() {
+    try {
+      const res = await fetch('/api/admin-registrations', {headers:{'x-admin':'1'}});
+      if (res.ok) allRegs = await res.json();
+    } catch { allRegs = []; }
+    renderRecentRegs();
+  }
+
+  async function loadTestimonials() {
+    try {
+      const res = await fetch('/api/admin-testimonials', {headers:{'x-admin':'1'}});
+      if (res.ok) allTestimonials = await res.json();
+    } catch { allTestimonials = []; }
+    const pending = allTestimonials.filter(t => t.status === 'pending').length;
+    const badge = document.getElementById('pendingReviewsBadge');
+    badge.textContent = pending;
+    badge.style.display = pending > 0 ? 'inline' : 'none';
+    document.getElementById('ds-reviews').textContent = pending;
+  }
+
+  async function loadGalleryAdmin() {
+    try {
+      const res = await fetch('/api/admin-gallery', {headers:{'x-admin':'1'}});
+      if (res.ok) allGallery = await res.json();
+    } catch { allGallery = []; }
+    const pending = allGallery.filter(g => g.status === 'pending' && g.source === 'parent').length;
+    const badge = document.getElementById('pendingGalleryBadge');
+    badge.textContent = pending;
+    badge.style.display = pending > 0 ? 'inline' : 'none';
+    document.getElementById('ds-gallery').textContent = pending;
+  }
+
+  function updateDashboard() {
+    const total = allRegs.length;
+    const paid = allRegs.filter(r => r.paid).length;
+    document.getElementById('ds-total').textContent = total;
+    document.getElementById('ds-paid').textContent = paid;
+    document.getElementById('ds-unpaid').textContent = total - paid;
+  }
+
+  function renderSpots(spots, containerId) {
+    const days = [
+      {key:'monday',label:'Monday',cls:'monday',ages:'Ages 3–6',emoji:'☀️'},
+      {key:'wednesday',label:'Wednesday',cls:'wednesday',ages:'Ages 3–6',emoji:'🌈'},
+      {key:'friday',label:'Friday',cls:'friday',ages:'Ages 7–8',emoji:'⭐'},
+    ];
+    const el = document.getElementById(containerId);
+    el.innerHTML = days.map(d => {
+      const count = spots[d.key] ?? 10;
+      const pct = (count/10)*100;
+      return `
+        <div class="spot-card ${d.cls}">
+          <div class="spot-day">${d.emoji} ${d.label}</div>
+          <div class="spot-ages">${d.ages}</div>
+          <div class="spot-count" id="count-${containerId}-${d.key}">${count}</div>
+          <div class="spot-of">of 10 spots available</div>
+          <div class="spot-controls">
+            <button class="spot-btn" onclick="adjustSpot('${d.key}','${containerId}',-1)">−</button>
+            <input class="spot-input" type="number" min="0" max="10" value="${count}" id="input-${containerId}-${d.key}" onchange="syncInput('${d.key}','${containerId}',this.value)" />
+            <button class="spot-btn" onclick="adjustSpot('${d.key}','${containerId}',1)">+</button>
+          </div>
+          <div class="spot-bar-wrap"><div class="spot-bar" style="width:${pct}%"></div></div>
+          <button class="spot-save" onclick="saveSpot('${d.key}','${containerId}')">Save Changes</button>
+        </div>`;
+    }).join('');
+  }
+
+  function adjustSpot(day, cid, delta) {
+    const input = document.getElementById('input-' + cid + '-' + day);
+    const newVal = Math.min(10, Math.max(0, parseInt(input.value||0) + delta));
+    input.value = newVal;
+    document.getElementById('count-' + cid + '-' + day).textContent = newVal;
+  }
+
+  function syncInput(day, cid, val) {
+    const v = Math.min(10, Math.max(0, parseInt(val||0)));
+    document.getElementById('count-' + cid + '-' + day).textContent = v;
+    document.getElementById('input-' + cid + '-' + day).value = v;
+  }
+
+  async function saveSpot(day, cid) {
+    const val = parseInt(document.getElementById('input-' + cid + '-' + day).value);
+    try {
+      const res = await fetch('/api/admin-spots', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({day, spots: val})
+      });
+      if (!res.ok) throw new Error();
+      currentSpots[day] = val;
+      showToast('✅ ' + day.charAt(0).toUpperCase()+day.slice(1) + ' spots updated to ' + val, 'success');
+    } catch { showToast('Failed to save spots', 'error'); }
+  }
+
+  async function resetAllSpots(val) {
+    if (!confirm('Set all classes to ' + val + ' spots?')) return;
+    for (const day of ['monday','wednesday','friday']) {
+      document.getElementById('input-spotsGrid-' + day).value = val;
+      document.getElementById('count-spotsGrid-' + day).textContent = val;
+      await saveSpot(day, 'spotsGrid');
+    }
+  }
+
+  function renderRecentRegs() {
+    const recent = [...allRegs].sort((a,b) => new Date(b.created_at)-new Date(a.created_at)).slice(0,5);
+    const tb = document.getElementById('recentRegTable');
+    if (!recent.length) { tb.innerHTML = '<tr><td colspan="5" style="color:#888;padding:20px">No registrations yet.</td></tr>'; return; }
+    tb.innerHTML = `<thead><tr><th>Parent</th><th>Child</th><th>Day</th><th>Package</th><th>Status</th></tr></thead>` +
+      recent.map(r => `<tr>
+        <td>${esc(r.parent_first)} ${esc(r.parent_last)}</td>
+        <td>${esc(r.child_first)}, age ${r.child_age}</td>
+        <td><span class="badge-day badge-${r.class_day}">${r.class_day}</span></td>
+        <td>${pkgLabel(r.package)}</td>
+        <td>${r.paid ? '<span class="badge-paid">Paid</span>' : '<span class="badge-unpaid">Unpaid</span>'}</td>
+      </tr>`).join('');
+  }
+
+  function renderRegistrations(regs) {
+    const tb = document.getElementById('regTableBody');
+    if (!regs.length) { tb.innerHTML = '<tr><td colspan="7" style="color:#888;padding:20px">No registrations found.</td></tr>'; return; }
+    tb.innerHTML = regs.map(r => `<tr>
+      <td><strong>${esc(r.parent_first)} ${esc(r.parent_last)}</strong><br><small style="color:#888">${esc(r.email)}</small>${r.phone ? '<br><small style="color:#aaa">'+esc(r.phone)+'</small>' : ''}</td>
+      <td>${esc(r.child_first)}, age ${r.child_age}</td>
+      <td><span class="badge-day badge-${r.class_day}">${r.class_day}</span></td>
+      <td>${pkgLabel(r.package)}</td>
+      <td id="paid-badge-${r.id}">${r.paid ? '<span class="badge-paid">✓ Paid</span>' : '<span class="badge-unpaid" onclick="togglePaid('+r.id+',false)">Unpaid — click to mark paid</span>'}</td>
+      <td style="color:#888;font-size:.8rem">${formatDate(r.created_at)}</td>
+      <td><button class="action-btn btn-delete" onclick="deleteReg(${r.id})">Delete</button></td>
+    </tr>`).join('');
+  }
+
+  async function togglePaid(id, currentlyPaid) {
+    try {
+      await fetch('/api/admin-registrations', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,paid:!currentlyPaid})});
+      const reg = allRegs.find(r => r.id === id);
+      if (reg) reg.paid = !currentlyPaid;
+      renderRegistrations(allRegs);
+      updateDashboard();
+      showToast('Payment status updated', 'success');
+    } catch { showToast('Failed to update', 'error'); }
+  }
+
+  async function deleteReg(id) {
+    if (!confirm('Delete this registration and restore the spot?')) return;
+    try {
+      await fetch('/api/admin-registrations', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
+      allRegs = allRegs.filter(r => r.id !== id);
+      renderRegistrations(allRegs);
+      updateDashboard();
+      showToast('Registration deleted', 'success');
+    } catch { showToast('Failed to delete', 'error'); }
+  }
+
+  function filterRegs(filter, tab) {
+    document.querySelectorAll('#page-registrations .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filtered = filter === 'all' ? allRegs
+      : filter === 'unpaid' ? allRegs.filter(r => !r.paid)
+      : filter === 'paid'   ? allRegs.filter(r => r.paid)
+      : allRegs.filter(r => r.class_day === filter);
+    renderRegistrations(filtered);
+  }
+
+  function renderTestimonials(reviews) {
+    const tb = document.getElementById('reviewTableBody');
+    if (!reviews.length) { tb.innerHTML = '<tr><td colspan="7" style="color:#888;padding:20px">No reviews in this category.</td></tr>'; return; }
+    tb.innerHTML = reviews.map(r => `<tr>
+      <td><strong>${esc(r.reviewer_name)}</strong><br><small style="color:#888">${r.age_group}</small></td>
+      <td><span class="review-stars">${'⭐'.repeat(r.rating)}</span></td>
+      <td><div class="review-preview">${esc(r.review_text)}</div></td>
+      <td>${r.media_urls && r.media_urls.length ? r.media_urls.map(u => u.match(/\.(mp4|mov)/i) ? '<span style="font-size:1.2rem">▶</span>' : `<img class="media-thumb" src="${u}" />`).join(' ') : '<span style="color:#ccc">—</span>'}</td>
+      <td>${r.status === 'pending' ? '<span class="badge-pending">Pending</span>' : r.status === 'approved' ? '<span class="badge-approved">Approved</span>' : '<span class="badge-unpaid">Rejected</span>'}</td>
+      <td style="color:#888;font-size:.8rem">${formatDate(r.created_at)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        ${r.status !== 'approved' ? `<button class="action-btn btn-approve" onclick="moderateReview(${r.id},'approved')">Approve</button>` : ''}
+        ${r.status !== 'rejected' ? `<button class="action-btn btn-reject" onclick="moderateReview(${r.id},'rejected')">Reject</button>` : ''}
+      </td>
+    </tr>`).join('');
+  }
+
+  async function moderateReview(id, status) {
+    try {
+      await fetch('/api/admin-testimonials', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
+      const t = allTestimonials.find(t => t.id === id);
+      if (t) t.status = status;
+      filterTestimonials(document.querySelector('#page-reviews .tab.active').textContent.toLowerCase().trim(), document.querySelector('#page-reviews .tab.active'));
+      loadTestimonials();
+      showToast('Review ' + status, 'success');
+    } catch { showToast('Failed to update', 'error'); }
+  }
+
+  function filterTestimonials(filter, tab) {
+    document.querySelectorAll('#page-reviews .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filtered = filter === 'all' ? allTestimonials : allTestimonials.filter(t => t.status === filter);
+    renderTestimonials(filtered);
+  }
+
+  function renderGalleryAdmin(items) {
+    const tb = document.getElementById('galleryTableBody');
+    if (!items.length) { tb.innerHTML = '<tr><td colspan="7" style="color:#888;padding:20px">No gallery submissions in this category.</td></tr>'; return; }
+    tb.innerHTML = items.map(g => `<tr>
+      <td><strong>${esc(g.submitted_by || 'Owner')}</strong></td>
+      <td>${esc(g.caption || '—')}</td>
+      <td>${g.url ? (g.type === 'video' ? '<span style="font-size:1.4rem">▶</span>' : `<img class="media-thumb" src="${g.url}" />`) : '—'}</td>
+      <td>${g.category || '—'}</td>
+      <td>${g.status === 'pending' ? '<span class="badge-pending">Pending</span>' : g.status === 'approved' ? '<span class="badge-approved">Approved</span>' : '<span class="badge-unpaid">Rejected</span>'}</td>
+      <td style="color:#888;font-size:.8rem">${formatDate(g.created_at)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        ${g.status !== 'approved' ? `<button class="action-btn btn-approve" onclick="moderateGallery(${g.id},'approved')">Approve</button>` : ''}
+        ${g.status !== 'rejected' ? `<button class="action-btn btn-reject" onclick="moderateGallery(${g.id},'rejected')">Reject</button>` : ''}
+        <button class="action-btn btn-delete" onclick="deleteGallery(${g.id})">Delete</button>
+      </td>
+    </tr>`).join('');
+  }
+
+  async function moderateGallery(id, status) {
+    try {
+      await fetch('/api/admin-gallery', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
+      const g = allGallery.find(g => g.id === id);
+      if (g) g.status = status;
+      filterGalleryAdmin(document.querySelector('#page-gallery .tab.active').textContent.toLowerCase().trim(), document.querySelector('#page-gallery .tab.active'));
+      loadGalleryAdmin();
+      showToast('Media ' + status, 'success');
+    } catch { showToast('Failed to update', 'error'); }
+  }
+
+  async function deleteGallery(id) {
+    if (!confirm('Delete this media item?')) return;
+    try {
+      await fetch('/api/admin-gallery', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
+      allGallery = allGallery.filter(g => g.id !== id);
+      filterGalleryAdmin('all', document.querySelector('#page-gallery .tab:last-child'));
+      showToast('Media deleted', 'success');
+    } catch { showToast('Failed to delete', 'error'); }
+  }
+
+  function filterGalleryAdmin(filter, tab) {
+    document.querySelectorAll('#page-gallery .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filtered = filter === 'all' ? allGallery.filter(g => g.source === 'parent')
+      : allGallery.filter(g => g.source === 'parent' && g.status === filter);
+    renderGalleryAdmin(filtered);
+  }
+
+  function handleAdminUpload(files) {
+    adminFiles = Array.from(files);
+    const preview = document.getElementById('adminUploadPreview');
+    preview.innerHTML = '';
+    adminFiles.forEach(f => {
+      const div = document.createElement('div');
+      div.style.cssText = 'position:relative;width:80px;height:80px;border-radius:10px;overflow:hidden;border:2px solid var(--peach)';
+      if (f.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(f);
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+        div.appendChild(img);
+      } else {
+        div.style.background = 'var(--dark)';
+        div.style.display = 'flex'; div.style.alignItems = 'center'; div.style.justifyContent = 'center';
+        div.style.color = '#fff'; div.style.fontSize = '1.5rem';
+        div.textContent = '▶';
+      }
+      preview.appendChild(div);
+    });
+  }
+
+  const uz = document.getElementById('adminUploadZone');
+  uz.addEventListener('dragover', e => { e.preventDefault(); uz.style.borderColor = 'var(--coral)'; });
+  uz.addEventListener('dragleave', () => uz.style.borderColor = '');
+  uz.addEventListener('drop', e => { e.preventDefault(); uz.style.borderColor = ''; handleAdminUpload(e.dataTransfer.files); });
+
+  async function uploadAdminMedia() {
+    if (!adminFiles.length) { showToast('Please select files to upload', 'error'); return; }
+    const caption = document.getElementById('adminCaption').value;
+    const category = document.getElementById('adminCategory').value;
+    try {
+      const fd = new FormData();
+      adminFiles.forEach(f => fd.append('files', f));
+      fd.append('caption', caption);
+      fd.append('category', category);
+      fd.append('source', 'owner');
+      const res = await fetch('/api/admin-gallery', {method:'POST',headers:{'x-admin':'1'},body:fd});
+      if (!res.ok) throw new Error();
+      adminFiles = [];
+      document.getElementById('adminUploadPreview').innerHTML = '';
+      document.getElementById('adminCaption').value = '';
+      await loadGalleryAdmin();
+      showToast('Media uploaded and published!', 'success');
+    } catch { showToast('Upload failed. Please try again.', 'error'); }
+  }
+
+  function pkgLabel(p) { return {single:'Single ($40)','3class':'3-Class ($80)','4class':'4-Class ($140)'}[p] || p; }
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+
+  function showToast(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type + ' show';
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>

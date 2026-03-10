@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews — Bright Futures Growing Minds LLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sun:#FFD23F; --coral:#FF6B6B; --sky:#4ECDC4; --leaf:#6BCB77; --berry:#845EC2; --peach:#FFF0E6; --cream:#FFFBF2; --dark:#1A1A2E; --body:#3D3D5C; --card:#FFFFFF; --radius:20px; --shadow:0 8px 40px rgba(26,26,46,0.12); }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Nunito',sans-serif; background:var(--cream); color:var(--body); overflow-x:hidden; }
+    nav { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 40px; background:rgba(255,251,242,0.95); backdrop-filter:blur(12px); border-bottom:2px solid rgba(255,210,63,0.3); }
+    .nav-logo { font-family:'Fredoka',sans-serif; font-size:1.2rem; font-weight:700; color:var(--dark); line-height:1.2; text-decoration:none; flex-shrink:0; }
+    .nav-logo span { color:var(--coral); }
+    .nav-links { display:flex; align-items:center; gap:4px; }
+    .nav-links a { font-size:0.9rem; font-weight:700; color:var(--body); text-decoration:none; padding:7px 14px; border-radius:50px; transition:background .2s,color .2s; }
+    .nav-links a:hover { background:var(--peach); color:var(--dark); }
+    .nav-links a.active { background:var(--sun); color:var(--dark); }
+    .nav-cta { background:var(--coral); color:#fff; border:none; border-radius:50px; padding:10px 22px; font-family:'Nunito',sans-serif; font-size:0.95rem; font-weight:800; cursor:pointer; text-decoration:none; transition:transform .2s,box-shadow .2s; box-shadow:0 4px 16px rgba(255,107,107,0.35); }
+    .nav-cta:hover { transform:translateY(-2px); }
+    .page-hero { background:linear-gradient(135deg,#1A1A2E 0%,#2D1B69 100%); padding:100px 40px 80px; text-align:center; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 50%,rgba(255,210,63,0.12) 0%,transparent 55%),radial-gradient(circle at 70% 50%,rgba(132,94,194,0.15) 0%,transparent 55%); }
+    .page-hero-content { position:relative; z-index:1; max-width:640px; margin:0 auto; }
+    .badge { display:inline-block; background:var(--sun); color:var(--dark); border-radius:50px; padding:6px 18px; font-size:0.85rem; font-weight:800; margin-bottom:20px; }
+    .page-hero h1 { font-family:'Fredoka',sans-serif; font-size:clamp(2.4rem,5vw,3.8rem); font-weight:700; color:#fff; line-height:1.15; margin-bottom:20px; }
+    .page-hero h1 em { color:var(--sun); font-style:normal; }
+    .page-hero p { font-size:1.1rem; color:rgba(255,255,255,0.75); line-height:1.75; }
+    .stats-bar { background:var(--dark); padding:40px; display:flex; justify-content:center; gap:60px; flex-wrap:wrap; }
+    .stat { text-align:center; }
+    .stat-num { font-family:'Fredoka',sans-serif; font-size:2.5rem; color:var(--sun); font-weight:700; line-height:1; }
+    .stat-label { font-size:0.85rem; color:rgba(255,255,255,0.6); margin-top:4px; font-weight:600; }
+    section { padding:80px 40px; }
+    .section-label { display:inline-block; background:var(--sun); color:var(--dark); border-radius:50px; padding:6px 18px; font-size:0.85rem; font-weight:800; margin-bottom:16px; }
+    h2 { font-family:'Fredoka',sans-serif; font-size:clamp(1.9rem,3.5vw,2.7rem); color:var(--dark); font-weight:700; line-height:1.2; margin-bottom:16px; }
+    #reviews { background:var(--cream); }
+    .reviews-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px; margin-top:48px; }
+    .review-card { background:var(--card); border-radius:var(--radius); padding:32px 28px; box-shadow:var(--shadow); position:relative; transition:transform .3s; }
+    .review-card:hover { transform:translateY(-4px); }
+    .review-card::before { content:'"'; font-family:'Fredoka',sans-serif; font-size:5rem; color:var(--sun); opacity:0.15; position:absolute; top:12px; left:20px; line-height:1; pointer-events:none; }
+    .stars { display:flex; gap:4px; margin-bottom:12px; }
+    .review-text { font-size:0.98rem; line-height:1.75; color:var(--body); margin-bottom:20px; position:relative; z-index:1; }
+    .review-author { display:flex; align-items:center; gap:12px; }
+    .review-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--coral),#FF9A6C); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+    .review-name { font-weight:800; color:var(--dark); font-size:0.9rem; }
+    .review-meta { font-size:0.8rem; color:#888; margin-top:2px; }
+    .review-media { margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
+    .review-media img,.review-media video { width:80px; height:80px; object-fit:cover; border-radius:10px; cursor:pointer; transition:transform .2s; }
+    .review-media img:hover,.review-media video:hover { transform:scale(1.05); }
+    .empty-state { text-align:center; padding:60px; }
+    .empty-state .es-icon { font-size:3.5rem; margin-bottom:12px; }
+    .empty-state h3 { font-family:'Fredoka',sans-serif; font-size:1.5rem; color:var(--dark); margin-bottom:8px; }
+    .empty-state p { color:#888; }
+    #submit-review { background:var(--peach); }
+    .submit-layout { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; margin-top:48px; }
+    .submit-info h3 { font-family:'Fredoka',sans-serif; font-size:1.5rem; color:var(--dark); margin-bottom:12px; }
+    .submit-info p { font-size:1rem; color:var(--body); line-height:1.7; margin-bottom:12px; }
+    .review-form { background:var(--card); border-radius:var(--radius); padding:36px 32px; box-shadow:var(--shadow); }
+    .form-group { margin-bottom:18px; }
+    .form-group label { display:block; font-size:0.88rem; font-weight:700; color:var(--dark); margin-bottom:6px; }
+    .form-group input,.form-group textarea,.form-group select { width:100%; padding:12px 16px; border:2px solid #E8E8F0; border-radius:12px; font-family:'Nunito',sans-serif; font-size:0.95rem; color:var(--dark); background:var(--cream); outline:none; transition:border-color .2s; }
+    .form-group textarea { min-height:100px; resize:vertical; }
+    .form-group input:focus,.form-group textarea:focus { border-color:var(--coral); }
+    .star-picker { display:flex; gap:8px; cursor:pointer; }
+    .star-pick { font-size:2rem; transition:transform .15s; filter:grayscale(1); }
+    .star-pick:hover,.star-pick.selected { filter:none; transform:scale(1.15); }
+    .file-drop { border:3px dashed #E8E8F0; border-radius:16px; padding:28px; text-align:center; cursor:pointer; transition:border-color .2s,background .2s; position:relative; }
+    .file-drop:hover,.file-drop.dragover { border-color:var(--coral); background:var(--peach); }
+    .file-drop input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .file-drop .drop-icon { font-size:1.8rem; margin-bottom:6px; }
+    .file-drop p { font-size:0.85rem; color:#888; }
+    .file-drop strong { color:var(--coral); }
+    .file-preview { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .file-thumb { width:56px; height:56px; border-radius:8px; object-fit:cover; border:2px solid var(--peach); }
+    .submit-btn { width:100%; background:var(--coral); color:#fff; border:none; border-radius:50px; padding:14px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; margin-top:8px; box-shadow:0 6px 20px rgba(255,107,107,0.35); transition:transform .2s; }
+    .submit-btn:hover { transform:translateY(-2px); }
+    .submit-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .success-msg { background:var(--leaf); color:#fff; border-radius:12px; padding:14px 18px; margin-bottom:16px; font-weight:700; font-size:0.9rem; display:none; }
+    .success-msg.show { display:block; }
+    .error-msg { background:#FFE8E8; color:#CC2200; border-radius:12px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem; display:none; }
+    .error-msg.show { display:block; }
+    .lightbox { position:fixed; inset:0; z-index:2000; background:rgba(26,26,46,0.95); display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .lightbox.open { opacity:1; pointer-events:all; }
+    .lightbox img,.lightbox video { max-width:90vw; max-height:85vh; border-radius:16px; object-fit:contain; }
+    .lightbox-close { position:fixed; top:20px; right:20px; background:rgba(255,255,255,0.15); border:none; color:#fff; width:40px; height:40px; border-radius:50%; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    footer { background:var(--dark); padding:40px; text-align:center; color:rgba(255,255,255,0.5); font-size:0.9rem; line-height:1.8; }
+    footer strong { color:rgba(255,255,255,0.85); }
+    footer a { color:var(--sun); }
+    @media(max-width:768px){ nav{padding:14px 20px;} .nav-links{display:none;} section{padding:60px 20px;} .page-hero{padding:80px 20px 60px;} .submit-layout{grid-template-columns:1fr;} .stats-bar{gap:32px;} }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Bright Futures<br><span>Growing Minds LLC</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="testimonials.html" class="active">Reviews</a>
+  </div>
+  <a class="nav-cta" href="index.html#schedule">Reserve a Spot 🌟</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <div class="badge">Parent Reviews</div>
+    <h1>What <em>Families</em><br>Are Saying</h1>
+    <p>Don't just take our word for it — hear directly from the parents whose children are growing, thriving, and shining at Bright Futures.</p>
+  </div>
+</div>
+
+<div class="stats-bar" id="statsBar">
+  <div class="stat"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Happy Families</div></div>
+  <div class="stat"><div class="stat-num" id="statRating">—</div><div class="stat-label">Average Rating</div></div>
+  <div class="stat"><div class="stat-num">⭐⭐⭐⭐⭐</div><div class="stat-label">5-Star Reviews</div></div>
+</div>
+
+<section id="reviews">
+  <div class="section-label">Parent Testimonials</div>
+  <h2>Real Stories from Real Families</h2>
+  <div class="reviews-grid" id="reviewsGrid">
+    <div style="text-align:center;padding:60px;color:#888;grid-column:1/-1">
+      <div style="width:40px;height:40px;border:4px solid var(--peach);border-top-color:var(--coral);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px"></div>
+      Loading reviews...
+    </div>
+  </div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</section>
+
+<section id="submit-review">
+  <div class="section-label">Share Your Experience</div>
+  <div class="submit-layout">
+    <div class="submit-info">
+      <h3>💬 Leave a Review</h3>
+      <p>Has your child attended Bright Futures Growing Minds classes? We'd love to hear about their experience!</p>
+      <p>Your review helps other families discover what makes our classes special. You can also attach a photo or video of your child's experience.</p>
+      <p style="font-size:0.9rem;color:#888;font-style:italic">All reviews are moderated before being published to maintain quality and authenticity.</p>
+    </div>
+    <div class="review-form">
+      <div class="success-msg" id="successMsg">🌟 Thank you for your review! We'll publish it after a quick review within 24–48 hours.</div>
+      <div class="error-msg" id="errorMsg"></div>
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="reviewName" placeholder="Jane Smith" required />
+      </div>
+      <div class="form-group">
+        <label>Child's Age Group</label>
+        <select id="reviewAgeGroup">
+          <option value="ages-3-6">Ages 3–6 (Mon/Wed class)</option>
+          <option value="ages-7-8">Ages 7–8 (Friday class)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Rating *</label>
+        <div class="star-picker" id="starPicker">
+          <span class="star-pick" data-val="1" onclick="setRating(1)">⭐</span>
+          <span class="star-pick" data-val="2" onclick="setRating(2)">⭐</span>
+          <span class="star-pick" data-val="3" onclick="setRating(3)">⭐</span>
+          <span class="star-pick" data-val="4" onclick="setRating(4)">⭐</span>
+          <span class="star-pick" data-val="5" onclick="setRating(5)">⭐</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your Review *</label>
+        <textarea id="reviewText" placeholder="Tell us about your child's experience at Bright Futures..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Add a Photo or Video (optional)</label>
+        <div class="file-drop" id="reviewFileDrop">
+          <input type="file" id="reviewFileInput" accept="image/*,video/*" multiple onchange="handleReviewFiles(this.files)" />
+          <div class="drop-icon">📎</div>
+          <p>Drag &amp; drop or <strong>click to browse</strong></p>
+        </div>
+        <div class="file-preview" id="reviewFilePreview"></div>
+      </div>
+      <button class="submit-btn" id="submitReviewBtn" onclick="submitReview()">Submit My Review 🌟</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Bright Futures Growing Minds LLC</strong><br/>
+  Enrichment Classes for Kids Ages 3–8<br/>
+  <a href="mailto:Brightfuturesgrowingmindsllc@gmail.com">Brightfuturesgrowingmindsllc@gmail.com</a><br/>
+  <span style="font-size:.8rem;opacity:.5;margin-top:8px;display:block">© 2026 Bright Futures Growing Minds LLC. All rights reserved.</span>
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="closeLb()">
+  <button class="lightbox-close" onclick="closeLb()">✕</button>
+  <div id="lbContent"></div>
+</div>
+
+<script>
+  let selectedRating = 0;
+  let reviewFiles = [];
+
+  function setRating(val) {
+    selectedRating = val;
+    document.querySelectorAll('.star-pick').forEach((s,i) => {
+      s.classList.toggle('selected', i < val);
+    });
+  }
+
+  async function loadReviews() {
+    try {
+      const res = await fetch('/api/testimonials');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      renderReviews(data);
+      updateStats(data);
+    } catch { renderReviews([]); }
+  }
+
+  function renderReviews(reviews) {
+    const grid = document.getElementById('reviewsGrid');
+    if (reviews.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">💬</div><h3>No Reviews Yet</h3><p>Be the first to share your Bright Futures experience!</p></div>`;
+      return;
+    }
+    const avatarEmojis = ['👩🏽','👩🏾','👨🏻','👩🏼','👨🏿','👩🏻'];
+    grid.innerHTML = reviews.map((r,i) => `
+      <div class="review-card">
+        <div class="stars">${'⭐'.repeat(r.rating)}</div>
+        <p class="review-text">${escapeHtml(r.review_text)}</p>
+        <div class="review-author">
+          <div class="review-avatar">${avatarEmojis[i % avatarEmojis.length]}</div>
+          <div>
+            <div class="review-name">${escapeHtml(r.reviewer_name)}</div>
+            <div class="review-meta">${r.age_group === 'ages-7-8' ? 'Ages 7–8 class' : 'Ages 3–6 class'} · ${formatDate(r.created_at)}</div>
+          </div>
+        </div>
+        ${r.media_urls && r.media_urls.length ? `
+          <div class="review-media">
+            ${r.media_urls.map(url => url.match(/\.(mp4|mov|webm)/i)
+              ? `<video src="${url}" onclick="openLb('${url}','video')" muted></video>`
+              : `<img src="${url}" onclick="openLb('${url}','image')" loading="lazy" />`
+            ).join('')}
+          </div>` : ''}
+      </div>`).join('');
+  }
+
+  function updateStats(reviews) {
+    document.getElementById('statTotal').textContent = reviews.length;
+    if (reviews.length > 0) {
+      const avg = (reviews.reduce((s,r) => s + r.rating, 0) / reviews.length).toFixed(1);
+      document.getElementById('statRating').textContent = avg + ' / 5';
+    }
+  }
+
+  function handleReviewFiles(files) {
+    reviewFiles = Array.from(files);
+    const preview = document.getElementById('reviewFilePreview');
+    preview.innerHTML = '';
+    reviewFiles.forEach(f => {
+      if (f.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.className = 'file-thumb';
+        img.src = URL.createObjectURL(f);
+        preview.appendChild(img);
+      } else {
+        const div = document.createElement('div');
+        div.className = 'file-thumb';
+        div.style.cssText = 'background:var(--dark);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;';
+        div.textContent = '▶';
+        preview.appendChild(div);
+      }
+    });
+  }
+
+  const rfd = document.getElementById('reviewFileDrop');
+  rfd.addEventListener('dragover', e => { e.preventDefault(); rfd.classList.add('dragover'); });
+  rfd.addEventListener('dragleave', () => rfd.classList.remove('dragover'));
+  rfd.addEventListener('drop', e => { e.preventDefault(); rfd.classList.remove('dragover'); handleReviewFiles(e.dataTransfer.files); });
+
+  async function submitReview() {
+    const name = document.getElementById('reviewName').value.trim();
+    const text = document.getElementById('reviewText').value.trim();
+    const ageGroup = document.getElementById('reviewAgeGroup').value;
+    const btn = document.getElementById('submitReviewBtn');
+    const errDiv = document.getElementById('errorMsg');
+    const successDiv = document.getElementById('successMsg');
+    errDiv.classList.remove('show');
+    if (!name) { errDiv.textContent = 'Please enter your name.'; errDiv.classList.add('show'); return; }
+    if (!selectedRating) { errDiv.textContent = 'Please select a star rating.'; errDiv.classList.add('show'); return; }
+    if (!text) { errDiv.textContent = 'Please write your review.'; errDiv.classList.add('show'); return; }
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('rating', selectedRating);
+      formData.append('text', text);
+      formData.append('ageGroup', ageGroup);
+      reviewFiles.forEach(f => formData.append('files', f));
+      const res = await fetch('/api/submit-testimonial', { method: 'POST', body: formData });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Submission failed.');
+      successDiv.classList.add('show');
+      document.getElementById('reviewName').value = '';
+      document.getElementById('reviewText').value = '';
+      document.getElementById('reviewFilePreview').innerHTML = '';
+      reviewFiles = [];
+      selectedRating = 0;
+      document.querySelectorAll('.star-pick').forEach(s => s.classList.remove('selected'));
+    } catch(err) {
+      errDiv.textContent = err.message;
+      errDiv.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit My Review 🌟';
+    }
+  }
+
+  function openLb(url, type) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lbContent').innerHTML = type === 'video'
+      ? `<video src="${url}" controls autoplay style="max-width:90vw;max-height:85vh;border-radius:16px"></video>`
+      : `<img src="${url}" style="max-width:90vw;max-height:85vh;border-radius:16px;object-fit:contain" />`;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLb() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('lbContent').innerHTML = '';
+  }
+
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLb(); });
+  function escapeHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function formatDate(d) { return new Date(d).toLocaleDateString('en-US',{month:'short',year:'numeric'}); }
+
+  loadReviews();
+</script>
+</body>
+</html>
