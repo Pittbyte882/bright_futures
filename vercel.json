@@ -7,6 +7,7 @@
     { "src": "/api/admin-login",          "dest": "/api/admin-login.js" },
     { "src": "/api/admin-sessions",       "dest": "/api/admin-sessions.js" },
     { "src": "/api/admin-registrations",  "dest": "/api/admin-registrations.js" },
+    { "src": "/api/rsvp",                 "dest": "/api/rsvp.js" },
     { "src": "/api/admin-testimonials",   "dest": "/api/admin-sessions.js" },
     { "src": "/api/admin-gallery",        "dest": "/api/admin-gallery.js" },
     { "src": "/api/testimonials",         "dest": "/api/testimonials.js" },
