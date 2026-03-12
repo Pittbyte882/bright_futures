@@ -48,7 +48,7 @@ export default async function handler(req, res) {
       .map(s => new Date(s.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }))
       .join('<br/>');
 
-    const pkgPrices = { single: '$40', '3class': '$80', '4class': '$140' };
+    const pkgPrices = { single: '$40', '3class': '$110', '4class': '$140' };
     const price = pkgPrices[pkg] || '';
 
     // Send confirmation email to parent
