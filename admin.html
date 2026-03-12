@@ -272,7 +272,7 @@
     const err = document.getElementById('loginErr');
     err.classList.remove('show');
     try {
-      const res = await fetch('/api/admin-login', {
+      const res = await fetch('/api/admin?action=login', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({password: pass})
@@ -289,7 +289,7 @@
   document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
   function logout() {
-    fetch('/api/admin-login', {method:'DELETE'});
+    fetch('/api/admin?action=login', {method:'DELETE'});
     location.reload();
   }
 

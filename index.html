@@ -913,7 +913,7 @@
       return;
     }
     try {
-      const res = await fetch('/api/rsvp', {
+      const res = await fetch('/api/sessions?action=rsvp', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({sessionId:currentRsvpSessionId, name, email, children:parseInt(children)})
