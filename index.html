@@ -805,9 +805,9 @@
   }
 
   // ─── FETCH CURRENT SPOTS ──────────────────────────────────────
-  async function fetchSpots() {
+  async function fetchSessions() {
     try {
-      const res = await fetch(`${API_BASE}/api/spots`);
+      const res = await fetch(`${API_BASE}/api/sessions`);
       if (res.ok) {
         const data = await res.json();
         spots = data;
@@ -894,7 +894,7 @@
 
   // ─── INIT ─────────────────────────────────────────────────────
   renderSchedule();
-  fetchSpots();
+  fetchSessions();
   setInterval(fetchSpots, 60000);
 </script>
 </body>
