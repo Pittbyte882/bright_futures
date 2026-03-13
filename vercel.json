@@ -24,6 +24,7 @@
     { "src": "/gallery.html",             "dest": "/gallery.html" },
     { "src": "/testimonials.html",        "dest": "/testimonials.html" },
     { "src": "/",                         "dest": "/index.html" },
+    { "src": "/logobf.png",               "dest": "/logobf.png" },
     { "src": "/(.*)",                     "dest": "/index.html" }
   ]
 }
