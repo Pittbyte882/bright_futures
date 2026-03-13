@@ -148,8 +148,8 @@
       <div class="form-group">
         <label>Child's Age Group</label>
         <select id="reviewAgeGroup">
-          <option value="ages-3-6">Ages 3–6 (Mon/Wed class)</option>
-          <option value="ages-7-8">Ages 7–8 (Friday class)</option>
+          <option value="ages-3-6">Preschool to 1st Grade (Mon/Wed class)</option>
+          <option value="ages-7-8">Preschool to 1st Grade (Friday class)</option>
         </select>
       </div>
       <div class="form-group">
@@ -228,7 +228,7 @@
           <div class="review-avatar">${avatarEmojis[i % avatarEmojis.length]}</div>
           <div>
             <div class="review-name">${escapeHtml(r.reviewer_name)}</div>
-            <div class="review-meta">${r.age_group === 'ages-7-8' ? 'Ages 7–8 class' : 'Ages 3–6 class'} · ${formatDate(r.created_at)}</div>
+            <div class="review-meta">${r.age_group === 'Preschool to 1st Grade' ? 'Preschool to 1st Grade' : 'Preschool to 1st Grade'} · ${formatDate(r.created_at)}</div>
           </div>
         </div>
         ${r.media_urls && r.media_urls.length ? `
