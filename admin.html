@@ -320,7 +320,7 @@
 
   async function loadSpots() {
     try {
-      const res = await fetch('/api/spots');
+      const res = await fetch('/api/admin?action=sessions');
       if (res.ok) currentSpots = await res.json();
     } catch {}
     renderSpots(currentSpots, 'dashSpotsGrid');
@@ -328,7 +328,7 @@
 
   async function loadRegistrations() {
     try {
-      const res = await fetch('/api/admin-registrations', {headers:{'x-admin':'1'}});
+      const res = await fetch('/api/admin?action=registrations', {headers:{'x-admin':'1'}});
       if (res.ok) allRegs = await res.json();
     } catch { allRegs = []; }
     renderRecentRegs();
@@ -336,7 +336,7 @@
 
   async function loadTestimonials() {
     try {
-      const res = await fetch('/api/admin-testimonials', {headers:{'x-admin':'1'}});
+      const res = await fetch('/api/admin?action=testimonials', {headers:{'x-admin':'1'}});
       if (res.ok) allTestimonials = await res.json();
     } catch { allTestimonials = []; }
     const pending = allTestimonials.filter(t => t.status === 'pending').length;
@@ -348,7 +348,7 @@
 
   async function loadGalleryAdmin() {
     try {
-      const res = await fetch('/api/admin-gallery', {headers:{'x-admin':'1'}});
+      const res = await fetch('/api/admin?action=gallery', {headers:{'x-admin':'1'}});
       if (res.ok) allGallery = await res.json();
     } catch { allGallery = []; }
     const pending = allGallery.filter(g => g.status === 'pending' && g.source === 'parent').length;
@@ -409,7 +409,7 @@
   async function saveSpot(day, cid) {
     const val = parseInt(document.getElementById('input-' + cid + '-' + day).value);
     try {
-      const res = await fetch('/api/admin-spots', {
+      const res = await fetch('/api/admin?action=sessions', {
         method: 'POST',
         headers: {'Content-Type':'application/json','x-admin':'1'},
         body: JSON.stringify({day, spots: val})
@@ -459,7 +459,7 @@
 
   async function togglePaid(id, currentlyPaid) {
     try {
-      await fetch('/api/admin-registrations', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,paid:!currentlyPaid})});
+      await fetch('/api/admin?action=registrations', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,paid:!currentlyPaid})});
       const reg = allRegs.find(r => r.id === id);
       if (reg) reg.paid = !currentlyPaid;
       renderRegistrations(allRegs);
@@ -471,7 +471,7 @@
   async function deleteReg(id) {
     if (!confirm('Delete this registration and restore the spot?')) return;
     try {
-      await fetch('/api/admin-registrations', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
+      await fetch('/api/admin?action=registrations', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
       allRegs = allRegs.filter(r => r.id !== id);
       renderRegistrations(allRegs);
       updateDashboard();
@@ -508,7 +508,7 @@
 
   async function moderateReview(id, status) {
     try {
-      await fetch('/api/admin-testimonials', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
+      await fetch('/api/admin?action=testimonials', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
       const t = allTestimonials.find(t => t.id === id);
       if (t) t.status = status;
       filterTestimonials(document.querySelector('#page-reviews .tab.active').textContent.toLowerCase().trim(), document.querySelector('#page-reviews .tab.active'));
@@ -544,7 +544,7 @@
 
   async function moderateGallery(id, status) {
     try {
-      await fetch('/api/admin-gallery', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
+      await fetch('/api/admin?action=gallery', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
       const g = allGallery.find(g => g.id === id);
       if (g) g.status = status;
       filterGalleryAdmin(document.querySelector('#page-gallery .tab.active').textContent.toLowerCase().trim(), document.querySelector('#page-gallery .tab.active'));
@@ -556,7 +556,7 @@
   async function deleteGallery(id) {
     if (!confirm('Delete this media item?')) return;
     try {
-      await fetch('/api/admin-gallery', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
+      await fetch('/api/admin?action=gallery', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
       allGallery = allGallery.filter(g => g.id !== id);
       filterGalleryAdmin('all', document.querySelector('#page-gallery .tab:last-child'));
       showToast('Media deleted', 'success');
@@ -608,7 +608,7 @@
       fd.append('caption', caption);
       fd.append('category', category);
       fd.append('source', 'owner');
-      const res = await fetch('/api/admin-gallery', {method:'POST',headers:{'x-admin':'1'},body:fd});
+      const res = await fetch('/api/admin?action=gallery', {method:'POST',headers:{'x-admin':'1'},body:fd});
       if (!res.ok) throw new Error();
       adminFiles = [];
       document.getElementById('adminUploadPreview').innerHTML = '';
