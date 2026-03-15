@@ -13,10 +13,7 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
       const hash = crypto.createHash('sha256').update(body.password || '').digest('hex');
-      console.log('INCOMING HASH:', hash);
-      console.log('STORED HASH:', ADMIN_PASSWORD_HASH);
-      console.log('MATCH:', hash === ADMIN_PASSWORD_HASH);
-      if (hash !== ADMIN_PASSWORD_HASH) return res.status(401).json({ error: 'Invalid password', incoming: hash, stored: ADMIN_PASSWORD_HASH ? 'exists' : 'MISSING' });
+      if (hash !== ADMIN_PASSWORD_HASH) return res.status(401).json({ error: 'Invalid password' });
       const token = crypto.randomBytes(32).toString('hex');
       res.setHeader('Set-Cookie', serialize('admin_token', token, {
         httpOnly: true, secure: true, sameSite: 'strict', maxAge: 60 * 60 * 8, path: '/'
