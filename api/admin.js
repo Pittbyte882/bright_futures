@@ -57,10 +57,19 @@ export default async function handler(req, res) {
     }
     if (req.method === 'PATCH') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-      const { id, capacity, is_active } = body;
+      const { id, capacity, is_active, day_of_week } = body;
       const updates = {};
       if (capacity !== undefined) updates.capacity = capacity;
       if (is_active !== undefined) updates.is_active = is_active;
+      if (day_of_week && !id) {
+        const { error } = await supabase
+          .from('class_sessions')
+          .update(updates)
+          .eq('day_of_week', day_of_week)
+          .eq('session_type', 'class');
+        if (error) return res.status(500).json({ error: error.message });
+        return res.status(200).json({ ok: true });
+      }
       const { error } = await supabase.from('class_sessions').update(updates).eq('id', id);
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ ok: true });
