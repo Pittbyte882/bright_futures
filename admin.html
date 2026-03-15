@@ -4,19 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — Bright Futures Growing Minds</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ─── RESET & BASE ─── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root {
       --sun:#F9C22E; --coral:#E83A2E; --sky:#4BAEE8; --leaf:#3DB54A;
       --berry:#7B3FA0; --peach:#FFF4E0; --cream:#FFFDF5; --dark:#1A1A2E;
-      --body:#2D3A2E; --card:#FFFFFF; --radius:20px;
-      --shadow:0 8px 40px rgba(26,26,46,0.12);
+      --body:#2D3A2E; --card:#FFFFFF; --radius:16px;
+      --shadow:0 4px 24px rgba(26,26,46,0.1);
       --mon:#F9C22E; --wed:#4BAEE8; --fri:#7B3FA0; --play:#E83A2E;
       --sidebar:260px;
     }
     body { font-family:'Nunito',sans-serif; background:#F0F2F8; color:var(--body); min-height:100vh; }
+
+    /* ── LOGIN ── */
     .login-screen { position:fixed; inset:0; background:linear-gradient(135deg,var(--dark),#16213E); display:flex; align-items:center; justify-content:center; z-index:9999; }
     .login-box { background:#fff; border-radius:24px; padding:48px 40px; width:100%; max-width:380px; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.3); }
     .login-logo { font-family:'Fredoka',sans-serif; font-size:1.3rem; color:var(--dark); margin-bottom:4px; }
@@ -25,17 +26,19 @@
     .login-box h2 { font-family:'Fredoka',sans-serif; font-size:1.8rem; color:var(--dark); margin-bottom:24px; }
     .login-input { width:100%; padding:14px 16px; border:2px solid #E8E8F0; border-radius:12px; font-family:'Nunito',sans-serif; font-size:1rem; color:var(--dark); outline:none; margin-bottom:16px; transition:border-color .2s; }
     .login-input:focus { border-color:var(--coral); }
-    .login-btn { width:100%; background:var(--coral); color:#fff; border:none; border-radius:50px; padding:14px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; transition:transform .2s; box-shadow:0 6px 20px rgba(255,107,107,0.35); }
+    .login-btn { width:100%; background:var(--coral); color:#fff; border:none; border-radius:50px; padding:14px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; transition:transform .2s; box-shadow:0 6px 20px rgba(232,58,46,0.35); }
     .login-btn:hover { transform:translateY(-2px); }
     .login-err { background:#FFE8E8; color:#CC2200; border-radius:10px; padding:10px 14px; font-size:0.88rem; margin-bottom:14px; display:none; }
     .login-err.show { display:block; }
+
+    /* ── APP SHELL ── */
     .app { display:none; min-height:100vh; }
     .app.visible { display:flex; }
+
+    /* ── SIDEBAR ── */
     .sidebar { width:var(--sidebar); background:var(--dark); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
-    .sidebar-logo { padding:28px 24px 20px; border-bottom:1px solid rgba(255,255,255,0.08); }
-    .sidebar-logo .logo-text { font-family:'Fredoka',sans-serif; font-size:1.1rem; color:#fff; line-height:1.3; }
-    .sidebar-logo .logo-text span { color:var(--sun); }
-    .sidebar-logo .admin-badge { display:inline-block; background:var(--coral); color:#fff; border-radius:50px; padding:3px 10px; font-size:0.72rem; font-weight:800; margin-top:6px; }
+    .sidebar-logo { padding:20px 24px 16px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .admin-badge { display:inline-block; background:var(--coral); color:#fff; border-radius:50px; padding:3px 10px; font-size:0.72rem; font-weight:800; margin-top:6px; }
     .sidebar-nav { flex:1; padding:16px 0; }
     .nav-item { display:flex; align-items:center; gap:12px; padding:12px 24px; color:rgba(255,255,255,0.6); font-size:0.92rem; font-weight:700; cursor:pointer; transition:background .2s,color .2s; border-left:3px solid transparent; }
     .nav-item:hover { background:rgba(255,255,255,0.06); color:#fff; }
@@ -43,88 +46,148 @@
     .nav-item .ni-icon { font-size:1.2rem; width:24px; text-align:center; }
     .nav-badge { margin-left:auto; background:var(--coral); color:#fff; border-radius:50px; padding:2px 8px; font-size:0.72rem; font-weight:800; }
     .sidebar-footer { padding:20px 24px; border-top:1px solid rgba(255,255,255,0.08); }
-    .logout-btn { width:100%; background:rgba(255,107,107,0.15); color:var(--coral); border:1px solid rgba(255,107,107,0.3); border-radius:50px; padding:10px; font-family:'Nunito',sans-serif; font-size:0.88rem; font-weight:800; cursor:pointer; transition:background .2s; }
-    .logout-btn:hover { background:rgba(255,107,107,0.25); }
+    .logout-btn { width:100%; background:rgba(232,58,46,0.15); color:var(--coral); border:1px solid rgba(232,58,46,0.3); border-radius:50px; padding:10px; font-family:'Nunito',sans-serif; font-size:0.88rem; font-weight:800; cursor:pointer; transition:background .2s; }
+    .logout-btn:hover { background:rgba(232,58,46,0.25); }
+
+    /* ── MAIN ── */
     .main { margin-left:var(--sidebar); flex:1; padding:32px; min-height:100vh; }
     .page-title { font-family:'Fredoka',sans-serif; font-size:1.9rem; color:var(--dark); margin-bottom:4px; }
     .page-sub { color:#888; font-size:0.9rem; margin-bottom:28px; }
-    .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:28px; }
-    .stat-card { background:var(--card); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); }
-    .stat-card .sc-label { font-size:0.82rem; color:#888; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+
+    /* ── STAT CARDS ── */
+    .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:28px; }
+    .stat-card { background:var(--card); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); }
+    .stat-card .sc-label { font-size:0.78rem; color:#888; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
     .stat-card .sc-val { font-family:'Fredoka',sans-serif; font-size:2.2rem; color:var(--dark); font-weight:700; line-height:1; }
-    .stat-card .sc-sub { font-size:0.8rem; color:#aaa; margin-top:4px; }
-    .stat-card.coral .sc-val { color:var(--coral); }
-    .stat-card.sky .sc-val { color:var(--sky); }
-    .stat-card.leaf .sc-val { color:var(--leaf); }
-    .stat-card.sun .sc-val { color:#D4A017; }
+    .stat-card .sc-sub { font-size:0.78rem; color:#aaa; margin-top:4px; }
+    .stat-card.coral .sc-val{color:var(--coral);} .stat-card.sky .sc-val{color:var(--sky);} .stat-card.leaf .sc-val{color:var(--leaf);} .stat-card.sun .sc-val{color:#C8960A;}
+
+    /* ── PANELS ── */
     .panel { background:var(--card); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow); margin-bottom:24px; }
-    .panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
     .panel-title { font-family:'Fredoka',sans-serif; font-size:1.3rem; color:var(--dark); }
     .panel-action { background:var(--dark); color:#fff; border:none; border-radius:50px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:0.85rem; font-weight:800; cursor:pointer; transition:opacity .2s; }
     .panel-action:hover { opacity:.85; }
-    .spots-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-    .spot-card { border-radius:16px; padding:24px; color:#fff; text-align:center; }
-    .spot-card.monday { background:linear-gradient(135deg,#FFD23F,#FFA62B); }
-    .spot-card.wednesday { background:linear-gradient(135deg,#4ECDC4,#44A9B0); }
-    .spot-card.friday { background:linear-gradient(135deg,#845EC2,#6A3FA8); }
-    .spot-day { font-family:'Fredoka',sans-serif; font-size:1.3rem; margin-bottom:4px; }
-    .spot-ages { font-size:0.78rem; background:rgba(255,255,255,0.25); border-radius:50px; padding:3px 10px; margin-bottom:16px; display:inline-block; font-weight:700; }
-    .spot-count { font-family:'Fredoka',sans-serif; font-size:3rem; font-weight:700; line-height:1; }
-    .spot-of { font-size:0.85rem; opacity:.8; margin-bottom:16px; }
-    .spot-controls { display:flex; align-items:center; justify-content:center; gap:12px; }
-    .spot-btn { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.25); border:none; color:#fff; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; font-weight:700; }
-    .spot-btn:hover { background:rgba(255,255,255,0.4); }
-    .spot-input { width:60px; text-align:center; background:rgba(255,255,255,0.2); border:2px solid rgba(255,255,255,0.4); border-radius:10px; color:#fff; font-family:'Fredoka',sans-serif; font-size:1.3rem; font-weight:700; padding:4px; outline:none; }
-    .spot-save { margin-top:12px; width:100%; background:rgba(255,255,255,0.9); color:var(--dark); border:none; border-radius:50px; padding:8px; font-family:'Nunito',sans-serif; font-size:0.85rem; font-weight:800; cursor:pointer; transition:background .2s; }
-    .spot-save:hover { background:#fff; }
-    .spot-bar-wrap { background:rgba(255,255,255,0.2); border-radius:50px; height:8px; margin-top:12px; overflow:hidden; }
-    .spot-bar { height:100%; background:#fff; border-radius:50px; transition:width .4s; }
+    .btn-coral { background:var(--coral) !important; }
+    .btn-leaf { background:var(--leaf) !important; }
+    .btn-sky { background:var(--sky) !important; }
+    .btn-sun { background:var(--sun) !important; color:var(--dark) !important; }
+
+    /* ── TABLES ── */
     .table-wrap { overflow-x:auto; }
     table { width:100%; border-collapse:collapse; }
-    th { text-align:left; padding:10px 14px; font-size:0.8rem; color:#888; font-weight:800; text-transform:uppercase; letter-spacing:.4px; border-bottom:2px solid #F0F2F8; }
-    td { padding:12px 14px; font-size:0.88rem; border-bottom:1px solid #F0F2F8; vertical-align:middle; }
+    th { text-align:left; padding:10px 14px; font-size:0.78rem; color:#888; font-weight:800; text-transform:uppercase; letter-spacing:.4px; border-bottom:2px solid #F0F2F8; white-space:nowrap; }
+    td { padding:11px 14px; font-size:0.88rem; border-bottom:1px solid #F0F2F8; vertical-align:middle; }
     tr:last-child td { border-bottom:none; }
     tr:hover td { background:#FAFAFA; }
-    .badge-paid { background:#D4EDDA; color:#155724; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
-    .badge-unpaid { background:#FFE8E8; color:#CC2200; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; cursor:pointer; }
-    .badge-pending { background:#FFF3CD; color:#856404; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
-    .badge-approved { background:#D4EDDA; color:#155724; border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
-    .badge-day { border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
+
+    /* ── BADGES ── */
+    .badge { border-radius:50px; padding:3px 10px; font-size:0.75rem; font-weight:800; display:inline-block; }
+    .badge-paid { background:#D4EDDA; color:#155724; }
+    .badge-unpaid { background:#FFE8E8; color:#CC2200; cursor:pointer; }
+    .badge-pending { background:#FFF3CD; color:#856404; }
+    .badge-approved { background:#D4EDDA; color:#155724; }
+    .badge-rejected { background:#FFE8E8; color:#CC2200; }
+    .badge-active { background:#D4EDDA; color:#155724; }
+    .badge-cancelled { background:#FFE8E8; color:#CC2200; }
     .badge-monday { background:#FFF8DC; color:#8B6914; }
     .badge-wednesday { background:#E0F7F5; color:#00695C; }
     .badge-friday { background:#F3E5FF; color:#6A1B9A; }
-    .action-btn { border:none; border-radius:8px; padding:6px 12px; font-family:'Nunito',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:opacity .2s; }
+    .badge-playdate { background:#FFE8E8; color:#C0392B; }
+
+    /* ── ACTION BUTTONS ── */
+    .action-btn { border:none; border-radius:8px; padding:5px 11px; font-family:'Nunito',sans-serif; font-size:0.78rem; font-weight:700; cursor:pointer; transition:opacity .2s; white-space:nowrap; }
     .action-btn:hover { opacity:.8; }
     .btn-approve { background:var(--leaf); color:#fff; }
     .btn-reject { background:var(--coral); color:#fff; }
     .btn-delete { background:#FFE8E8; color:var(--coral); }
-    .review-preview { font-size:0.85rem; color:#555; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .review-stars { color:var(--sun); font-size:0.9rem; }
-    .media-thumb { width:40px; height:40px; border-radius:8px; object-fit:cover; }
-    .tab-bar { display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid #F0F2F8; padding-bottom:0; }
-    .tab { padding:10px 20px; font-size:0.9rem; font-weight:700; color:#888; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:color .2s,border-color .2s; }
+    .btn-edit { background:#E8F4FD; color:var(--sky); }
+    .btn-cancel { background:#FFF3CD; color:#856404; }
+    .btn-activate { background:#D4EDDA; color:#155724; }
+    .btn-release { background:#F3E5FF; color:#6A1B9A; }
+
+    /* ── TABS ── */
+    .tab-bar { display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid #F0F2F8; flex-wrap:wrap; }
+    .tab { padding:10px 18px; font-size:0.88rem; font-weight:700; color:#888; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:color .2s,border-color .2s; }
     .tab:hover { color:var(--dark); }
     .tab.active { color:var(--dark); border-bottom-color:var(--coral); }
+
+    /* ── ADMIN PAGES ── */
     .admin-page { display:none; }
     .admin-page.active { display:block; }
-    .upload-zone { border:3px dashed #E0E0E0; border-radius:16px; padding:40px; text-align:center; cursor:pointer; transition:all .2s; position:relative; background:var(--cream); }
+
+    /* ── SESSION LIST ── */
+    .session-month-header { font-family:'Fredoka',sans-serif; font-size:1.1rem; color:var(--dark); padding:12px 0 8px; border-bottom:2px solid #F0F2F8; margin-bottom:8px; margin-top:20px; }
+    .session-month-header:first-child { margin-top:0; }
+    .session-row { display:grid; grid-template-columns:100px 80px 80px 1fr 80px 120px auto; gap:12px; align-items:center; padding:12px 16px; border-radius:12px; background:#FAFAFA; margin-bottom:6px; border:1px solid #F0F2F8; transition:background .2s; }
+    .session-row:hover { background:#F5F5FF; }
+    .session-row.cancelled { opacity:.5; }
+    .session-date { font-weight:800; font-size:0.88rem; color:var(--dark); }
+    .session-dow { font-size:0.78rem; color:#888; }
+    .capacity-input { width:60px; padding:6px 8px; border:2px solid #E8E8F0; border-radius:8px; font-family:'Nunito',sans-serif; font-size:0.88rem; text-align:center; outline:none; }
+    .capacity-input:focus { border-color:var(--sky); }
+    .capacity-save { background:var(--sky); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-size:0.78rem; font-weight:700; cursor:pointer; }
+    .spots-mini { font-size:0.82rem; color:#555; }
+    .spots-mini.almost { color:#E67E22; font-weight:800; }
+    .spots-mini.full { color:var(--coral); font-weight:800; }
+    .session-actions { display:flex; gap:6px; flex-wrap:wrap; }
+
+    /* ── PLAYDATE FORM ── */
+    .pd-form { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .pd-form-full { grid-column:1/-1; }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group label { font-size:0.8rem; font-weight:800; color:#888; text-transform:uppercase; letter-spacing:.5px; }
+    .form-group input, .form-group textarea, .form-group select { padding:11px 14px; border:2px solid #E8E8F0; border-radius:10px; font-family:'Nunito',sans-serif; font-size:0.92rem; color:var(--dark); outline:none; transition:border-color .2s; background:var(--cream); }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--coral); }
+    .form-group textarea { min-height:90px; resize:vertical; }
+
+    /* ── PLAYDATE CARDS ── */
+    .playdate-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; margin-top:16px; }
+    .pd-mgmt-card { background:linear-gradient(135deg,rgba(232,58,46,0.06),rgba(232,58,46,0.02)); border:1.5px solid rgba(232,58,46,0.2); border-radius:16px; padding:20px; }
+    .pd-mgmt-date { font-size:0.78rem; font-weight:800; color:var(--coral); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+    .pd-mgmt-theme { font-family:'Fredoka',sans-serif; font-size:1.2rem; color:var(--dark); margin-bottom:6px; }
+    .pd-mgmt-details { font-size:0.82rem; color:#666; line-height:1.55; margin-bottom:12px; }
+    .pd-mgmt-stats { display:flex; gap:12px; margin-bottom:12px; }
+    .pd-stat { background:rgba(255,255,255,0.8); border-radius:8px; padding:6px 12px; font-size:0.78rem; font-weight:800; color:var(--body); }
+    .pd-mgmt-actions { display:flex; gap:8px; }
+
+    /* ── GENERATE SESSIONS ── */
+    .gen-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; align-items:end; }
+
+    /* ── UPLOAD ZONE ── */
+    .upload-zone { border:3px dashed #E0E0E0; border-radius:16px; padding:36px; text-align:center; cursor:pointer; transition:all .2s; position:relative; background:var(--cream); }
     .upload-zone:hover { border-color:var(--coral); background:var(--peach); }
     .upload-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-    .upload-zone .uz-icon { font-size:2.5rem; margin-bottom:10px; }
-    .upload-zone p { color:#888; font-size:0.9rem; }
+    .upload-zone .uz-icon { font-size:2.2rem; margin-bottom:8px; }
+    .upload-zone p { color:#888; font-size:0.88rem; }
     .upload-zone strong { color:var(--coral); }
+
+    /* ── TOAST ── */
     .toast { position:fixed; bottom:24px; right:24px; background:var(--dark); color:#fff; border-radius:12px; padding:14px 20px; font-size:0.9rem; font-weight:700; z-index:9000; transform:translateY(80px); opacity:0; transition:all .3s; max-width:320px; }
     .toast.show { transform:translateY(0); opacity:1; }
     .toast.success { background:var(--leaf); }
     .toast.error { background:var(--coral); }
-    @media(max-width:768px){ .sidebar{transform:translateX(-100%);} .main{margin-left:0;padding:20px;} }
+
+    /* ── MISC ── */
+    .review-preview { font-size:0.85rem; color:#555; max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .review-stars { color:var(--sun); }
+    .media-thumb { width:40px; height:40px; border-radius:8px; object-fit:cover; }
+    .empty-state { text-align:center; padding:48px 20px; color:#aaa; }
+    .empty-state .es-icon { font-size:3rem; margin-bottom:12px; }
+    .inline-input { padding:6px 10px; border:2px solid #E8E8F0; border-radius:8px; font-family:'Nunito',sans-serif; font-size:0.88rem; outline:none; }
+    .inline-input:focus { border-color:var(--sky); }
+    .actions-col { display:flex; gap:6px; flex-wrap:wrap; }
+
+    @media(max-width:900px){ .session-row{grid-template-columns:1fr 1fr;} }
+    @media(max-width:768px){ .sidebar{transform:translateX(-100%);} .main{margin-left:0;padding:20px;} .pd-form{grid-template-columns:1fr;} }
   </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">Bright Futures<br><span>Growing Minds LLC</span></div>
+    <div class="login-logo"><img src="logobf.png" alt="Bright Futures" style="height:70px;width:auto;margin-bottom:8px;" /></div>
     <div class="login-sub">Admin Dashboard</div>
     <h2>🔐 Sign In</h2>
     <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
@@ -133,15 +196,17 @@
   </div>
 </div>
 
+<!-- APP -->
 <div class="app" id="app">
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <img src="logobf.png" alt="Bright Futures Growing Minds LLC" style="height:120px;width:auto;display:block;margin-bottom:8px;" />
+      <img src="logobf.png" alt="Bright Futures Growing Minds LLC" style="height:90px;width:auto;display:block;margin-bottom:8px;" />
       <div class="admin-badge">ADMIN</div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-item active" onclick="showPage('dashboard')"><span class="ni-icon">📊</span>Dashboard</div>
-      <div class="nav-item" onclick="showPage('spots')"><span class="ni-icon">📅</span>Class Spots</div>
+      <div class="nav-item" onclick="showPage('sessions')"><span class="ni-icon">📅</span>Class Sessions</div>
+      <div class="nav-item" onclick="showPage('playdates')"><span class="ni-icon">🎉</span>Playdates <span class="nav-badge" id="rsvpBadge" style="display:none">0</span></div>
       <div class="nav-item" onclick="showPage('registrations')"><span class="ni-icon">👨‍👩‍👧</span>Registrations</div>
       <div class="nav-item" onclick="showPage('reviews')"><span class="ni-icon">⭐</span>Reviews <span class="nav-badge" id="pendingReviewsBadge" style="display:none">0</span></div>
       <div class="nav-item" onclick="showPage('gallery')"><span class="ni-icon">📸</span>Gallery <span class="nav-badge" id="pendingGalleryBadge" style="display:none">0</span></div>
@@ -152,6 +217,8 @@
   </aside>
 
   <main class="main">
+
+    <!-- ── DASHBOARD ── -->
     <div class="admin-page active" id="page-dashboard">
       <div class="page-title">Dashboard</div>
       <div class="page-sub" id="dashDate">Welcome back!</div>
@@ -159,12 +226,15 @@
         <div class="stat-card coral"><div class="sc-label">Total Registrations</div><div class="sc-val" id="ds-total">—</div><div class="sc-sub">All time</div></div>
         <div class="stat-card leaf"><div class="sc-label">Paid</div><div class="sc-val" id="ds-paid">—</div><div class="sc-sub">Confirmed</div></div>
         <div class="stat-card sun"><div class="sc-label">Unpaid</div><div class="sc-val" id="ds-unpaid">—</div><div class="sc-sub">Awaiting payment</div></div>
-        <div class="stat-card sky"><div class="sc-label">Pending Reviews</div><div class="sc-val" id="ds-reviews">—</div><div class="sc-sub">Awaiting approval</div></div>
-        <div class="stat-card"><div class="sc-label">Pending Gallery</div><div class="sc-val" id="ds-gallery">—</div><div class="sc-sub">Awaiting approval</div></div>
+        <div class="stat-card sky"><div class="sc-label">Pending Reviews</div><div class="sc-val" id="ds-reviews">—</div><div class="sc-sub">Needs approval</div></div>
+        <div class="stat-card"><div class="sc-label">Pending Gallery</div><div class="sc-val" id="ds-gallery">—</div><div class="sc-sub">Needs approval</div></div>
       </div>
       <div class="panel">
-        <div class="panel-header"><div class="panel-title">📅 Spots Overview</div></div>
-        <div class="spots-grid" id="dashSpotsGrid">Loading...</div>
+        <div class="panel-header">
+          <div class="panel-title">📅 Upcoming Sessions</div>
+          <button class="panel-action btn-coral" onclick="releaseAllUnpaid()">🔓 Release All Unpaid</button>
+        </div>
+        <div id="dashSessionsList">Loading...</div>
       </div>
       <div class="panel">
         <div class="panel-header"><div class="panel-title">🆕 Recent Registrations</div><button class="panel-action" onclick="showPage('registrations')">View All</button></div>
@@ -172,25 +242,120 @@
       </div>
     </div>
 
-    <div class="admin-page" id="page-spots">
-      <div class="page-title">Class Spots</div>
-      <div class="page-sub">Adjust available spots per class day. Changes take effect immediately on the live site.</div>
+    <!-- ── CLASS SESSIONS ── -->
+    <div class="admin-page" id="page-sessions">
+      <div class="page-title">Class Sessions</div>
+      <div class="page-sub">Manage individual class dates — adjust capacity, cancel, reactivate, or release unpaid spots.</div>
+
       <div class="panel">
-        <div class="spots-grid" id="spotsGrid">Loading...</div>
+        <div class="panel-header"><div class="panel-title">⚙️ Generate Sessions</div></div>
+        <div class="gen-grid">
+          <div class="form-group">
+            <label>Month</label>
+            <select id="genMonth" class="inline-input">
+              <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+              <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+              <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+              <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input type="number" id="genYear" class="inline-input" value="2026" min="2026" max="2030" />
+          </div>
+          <div class="form-group">
+            <label>Default Capacity</label>
+            <input type="number" id="genCapacity" class="inline-input" value="10" min="1" max="50" />
+          </div>
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="panel-action btn-leaf" onclick="generateSessions()">Generate Month →</button>
+          </div>
+        </div>
       </div>
-      <div class="panel" style="margin-top:0">
-        <div class="panel-header"><div class="panel-title">⚡ Quick Actions</div></div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <button class="panel-action" style="background:var(--leaf)" onclick="resetAllSpots(10)">Reset All to 10</button>
-          <button class="panel-action" style="background:var(--sky)" onclick="resetAllSpots(0)">Set All to 0 (Sold Out)</button>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📋 All Sessions</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="panel-action btn-coral" onclick="releaseAllUnpaid()">🔓 Release All Unpaid</button>
+          </div>
+        </div>
+        <div class="tab-bar">
+          <div class="tab active" onclick="filterSessions('upcoming',this)">Upcoming</div>
+          <div class="tab" onclick="filterSessions('all',this)">All</div>
+          <div class="tab" onclick="filterSessions('cancelled',this)">Cancelled</div>
+        </div>
+        <div id="sessionsList">Loading...</div>
+      </div>
+    </div>
+
+    <!-- ── PLAYDATES ── -->
+    <div class="admin-page" id="page-playdates">
+      <div class="page-title">Playdates</div>
+      <div class="page-sub">Add, edit, and manage free themed playdates for enrolled families.</div>
+
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">➕ Add New Playdate</div></div>
+        <div class="pd-form" id="pdForm">
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="pdDate" />
+          </div>
+          <div class="form-group">
+            <label>Theme / Title *</label>
+            <input type="text" id="pdTheme" placeholder="e.g. 🌸 Spring Garden Party" />
+          </div>
+          <div class="form-group">
+            <label>Capacity</label>
+            <input type="number" id="pdCapacity" value="30" min="1" max="200" />
+          </div>
+          <div class="form-group">
+            <label>Time</label>
+            <input type="text" id="pdTime" placeholder="e.g. 10:00 AM – 12:00 PM" />
+          </div>
+          <div class="form-group pd-form-full">
+            <label>Description</label>
+            <textarea id="pdDescription" placeholder="Describe the playdate — what activities, what to expect, age groups welcome..."></textarea>
+          </div>
+          <div class="form-group pd-form-full">
+            <label>Instructions for Families</label>
+            <textarea id="pdInstructions" placeholder="What should families bring? Any dress code? Parking info? Drop-off instructions..."></textarea>
+          </div>
+          <div class="form-group pd-form-full" style="flex-direction:row;gap:12px;align-items:center">
+            <button class="panel-action btn-coral" onclick="savePlaydate()">Save Playdate 🎉</button>
+            <button class="panel-action" style="background:#888" onclick="clearPdForm()" id="pdCancelEdit" style="display:none">Cancel Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">🎉 Upcoming Playdates</div></div>
+        <div class="playdate-cards" id="playdateCards">
+          <div class="empty-state"><div class="es-icon">🎉</div><p>No playdates yet. Add one above!</p></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📋 Playdate RSVPs</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Playdate</th><th>Parent Name</th><th>Email</th><th>Children</th><th>Date RSVPed</th></tr></thead>
+            <tbody id="rsvpTableBody"><tr><td colspan="5" style="color:#888;padding:20px">Loading RSVPs...</td></tr></tbody>
+          </table>
         </div>
       </div>
     </div>
 
+    <!-- ── REGISTRATIONS ── -->
     <div class="admin-page" id="page-registrations">
       <div class="page-title">Registrations</div>
-      <div class="page-sub">Manage all class sign-ups. Click "Mark Paid" when you receive Venmo payment.</div>
+      <div class="page-sub">Manage all class sign-ups. Click unpaid badge to mark as paid.</div>
       <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">All Registrations</div>
+          <button class="panel-action btn-coral" onclick="releaseAllUnpaid()">🔓 Release Unpaid Spots</button>
+        </div>
         <div class="tab-bar">
           <div class="tab active" onclick="filterRegs('all',this)">All</div>
           <div class="tab" onclick="filterRegs('unpaid',this)">Unpaid</div>
@@ -201,16 +366,17 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Parent</th><th>Child</th><th>Day</th><th>Package</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-            <tbody id="regTableBody"><tr><td colspan="7" style="color:#888;padding:20px">Loading...</td></tr></tbody>
+            <thead><tr><th>Parent</th><th>Child</th><th>Date</th><th>Day</th><th>Package</th><th>Status</th><th>Booked</th><th>Actions</th></tr></thead>
+            <tbody id="regTableBody"><tr><td colspan="8" style="color:#888;padding:20px">Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
+    <!-- ── REVIEWS ── -->
     <div class="admin-page" id="page-reviews">
       <div class="page-title">Reviews & Testimonials</div>
-      <div class="page-sub">Approve or reject parent-submitted reviews before they appear on the public site.</div>
+      <div class="page-sub">Approve or reject parent-submitted reviews before they go public.</div>
       <div class="panel">
         <div class="tab-bar">
           <div class="tab active" onclick="filterTestimonials('pending',this)">Pending</div>
@@ -226,9 +392,10 @@
       </div>
     </div>
 
+    <!-- ── GALLERY ── -->
     <div class="admin-page" id="page-gallery">
       <div class="page-title">Gallery Management</div>
-      <div class="page-sub">Upload class photos/videos as owner, and approve parent submissions.</div>
+      <div class="page-sub">Upload class photos/videos and approve parent submissions.</div>
       <div class="panel">
         <div class="panel-header"><div class="panel-title">📤 Upload New Media</div></div>
         <div class="upload-zone" id="adminUploadZone">
@@ -247,7 +414,7 @@
             <option value="social">Social Skills</option>
             <option value="other">Other</option>
           </select>
-          <button class="panel-action" style="background:var(--coral)" onclick="uploadAdminMedia()">Upload &amp; Publish 📸</button>
+          <button class="panel-action btn-coral" onclick="uploadAdminMedia()">Upload &amp; Publish 📸</button>
         </div>
       </div>
       <div class="panel">
@@ -265,6 +432,7 @@
         </div>
       </div>
     </div>
+
   </main>
 </div>
 
@@ -272,17 +440,19 @@
 
 <script>
   let isAuthed = false;
-  let allRegs = [], allTestimonials = [], allGallery = [], currentSpots = {};
+  let allRegs = [], allTestimonials = [], allGallery = [];
+  let allSessions = [], allPlaydates = [], allRsvps = [];
   let adminFiles = [];
+  let editingPlaydateId = null;
 
+  // ── LOGIN ──
   async function doLogin() {
     const pass = document.getElementById('loginPass').value;
     const err = document.getElementById('loginErr');
     err.classList.remove('show');
     try {
       const res = await fetch('/api/admin?action=login', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({password: pass})
       });
       if (!res.ok) { err.classList.add('show'); return; }
@@ -293,7 +463,6 @@
       loadAll();
     } catch { err.classList.add('show'); }
   }
-
   document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
   function logout() {
@@ -301,72 +470,349 @@
     location.reload();
   }
 
+  // ── PAGE NAV ──
   async function showPage(name) {
     document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
+    const navMap = {dashboard:'dash',sessions:'class',playdates:'play',registrations:'regi',reviews:'revi',gallery:'gall'};
     document.querySelectorAll('.nav-item').forEach(n => {
-      if(n.textContent.trim().toLowerCase().startsWith(name === 'dashboard' ? 'dash' : name.slice(0,4))) n.classList.add('active');
+      if (n.textContent.trim().toLowerCase().startsWith(navMap[name]||name.slice(0,4))) n.classList.add('active');
     });
+    if (name === 'sessions') { await loadSessions(); renderSessionsList('upcoming'); }
+    if (name === 'playdates') { await loadPlaydates(); renderPlaydateCards(); await loadRsvps(); renderRsvpTable(); }
     if (name === 'registrations') renderRegistrations(allRegs);
     if (name === 'reviews') renderTestimonials(allTestimonials.filter(t => t.status === 'pending'));
     if (name === 'gallery') renderGalleryAdmin(allGallery.filter(g => g.status === 'pending' && g.source === 'parent'));
-    if (name === 'spots') { await loadSpots(); renderSpots(currentSpots, 'spotsGrid'); }
+    if (name === 'dashboard') renderDashSessions();
   }
 
+  // ── LOAD ALL ──
   async function loadAll() {
-    await Promise.all([loadSpots(), loadRegistrations(), loadTestimonials(), loadGalleryAdmin()]);
+    await Promise.all([loadSessions(), loadPlaydates(), loadRegistrations(), loadTestimonials(), loadGalleryAdmin(), loadRsvps()]);
     updateDashboard();
+    renderDashSessions();
   }
 
-  async function loadSpots() {
-  try {
-    const res = await fetch('/api/sessions');
-    if (res.ok) {
-      const data = await res.json();
-      // Convert array to simple key/value for renderSpots
-      currentSpots = {};
-      data.forEach(s => {
-        if (s.session_type === 'class') {
-          if (!currentSpots[s.day_of_week] || currentSpots[s.day_of_week] > s.spots_remaining) {
-            currentSpots[s.day_of_week] = s.spots_remaining;
-          }
-        }
+  // ── SESSIONS ──
+  async function loadSessions() {
+    try {
+      const res = await fetch('/api/sessions');
+      if (res.ok) {
+        const data = await res.json();
+        allSessions = data.filter(s => s.session_type === 'class');
+        allPlaydates = data.filter(s => s.session_type === 'playdate');
+      }
+    } catch { allSessions = []; }
+  }
+
+  function renderDashSessions() {
+    const el = document.getElementById('dashSessionsList');
+    const today = new Date().toISOString().split('T')[0];
+    const upcoming = allSessions.filter(s => s.date >= today && s.is_active).slice(0,8);
+    if (!upcoming.length) { el.innerHTML = '<div class="empty-state"><div class="es-icon">📅</div><p>No upcoming sessions found.</p></div>'; return; }
+    el.innerHTML = upcoming.map(s => {
+      const remaining = parseInt(s.spots_remaining);
+      const spotsClass = remaining <= 0 ? 'full' : remaining <= 3 ? 'almost' : '';
+      const spotsLabel = remaining <= 0 ? 'FULL' : remaining <= 3 ? `${remaining} left!` : `${remaining}/${s.capacity}`;
+      const d = new Date(s.date);
+      const dateLabel = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      return `<div class="session-row">
+        <div><div class="session-date">${dateLabel}</div></div>
+        <div><span class="badge badge-${s.day_of_week}">${s.day_of_week}</span></div>
+        <div><span class="badge badge-active">Active</span></div>
+        <div><span class="spots-mini ${spotsClass}">${spotsLabel} spots</span></div>
+        <div></div>
+        <div></div>
+        <div class="session-actions">
+          <button class="action-btn btn-release" onclick="releaseSessionUnpaid(${s.id})">Release Unpaid</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderSessionsList(filter) {
+    const el = document.getElementById('sessionsList');
+    const today = new Date().toISOString().split('T')[0];
+    let filtered = allSessions;
+    if (filter === 'upcoming') filtered = allSessions.filter(s => s.date >= today);
+    if (filter === 'cancelled') filtered = allSessions.filter(s => !s.is_active);
+    if (!filtered.length) { el.innerHTML = '<div class="empty-state"><div class="es-icon">📅</div><p>No sessions found.</p></div>'; return; }
+
+    // Group by month
+    const grouped = {};
+    filtered.forEach(s => {
+      const key = s.date.slice(0,7);
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(s);
+    });
+
+    el.innerHTML = Object.keys(grouped).sort().map(monthKey => {
+      const monthLabel = new Date(monthKey + '-02').toLocaleDateString('en-US',{month:'long',year:'numeric'});
+      const rows = grouped[monthKey].map(s => {
+        const remaining = parseInt(s.spots_remaining);
+        const spotsClass = remaining <= 0 ? 'full' : remaining <= 3 ? 'almost' : '';
+        const spotsLabel = remaining <= 0 ? 'FULL' : `${remaining} of ${s.capacity}`;
+        const d = new Date(s.date);
+        const dateLabel = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+        return `<div class="session-row ${s.is_active ? '' : 'cancelled'}">
+          <div><div class="session-date">${dateLabel}</div><div class="session-dow">${s.day_of_week} · Ages ${s.age_group}</div></div>
+          <div><span class="badge badge-${s.day_of_week}">${s.day_of_week}</span></div>
+          <div><span class="badge ${s.is_active ? 'badge-active' : 'badge-cancelled'}">${s.is_active ? 'Active' : 'Cancelled'}</span></div>
+          <div><span class="spots-mini ${spotsClass}">${spotsLabel} spots</span></div>
+          <div style="display:flex;gap:4px;align-items:center">
+            <input class="capacity-input" type="number" value="${s.capacity}" min="1" max="100" id="cap-${s.id}" />
+            <button class="capacity-save" onclick="saveCapacity(${s.id})">Save</button>
+          </div>
+          <div></div>
+          <div class="session-actions">
+            <button class="action-btn btn-release" onclick="releaseSessionUnpaid(${s.id})">🔓 Unpaid</button>
+            ${s.is_active
+              ? `<button class="action-btn btn-cancel" onclick="toggleSession(${s.id},false)">Cancel</button>`
+              : `<button class="action-btn btn-activate" onclick="toggleSession(${s.id},true)">Reactivate</button>`}
+            <button class="action-btn btn-delete" onclick="deleteSession(${s.id})">Delete</button>
+          </div>
+        </div>`;
+      }).join('');
+      return `<div class="session-month-header">${monthLabel}</div>${rows}`;
+    }).join('');
+  }
+
+  function filterSessions(filter, tab) {
+    document.querySelectorAll('#page-sessions .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderSessionsList(filter);
+  }
+
+  async function saveCapacity(id) {
+    const val = parseInt(document.getElementById('cap-' + id).value);
+    try {
+      const res = await fetch('/api/admin?action=sessions', {
+        method:'PATCH', headers:{'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({id, capacity: val})
       });
+      if (!res.ok) throw new Error();
+      const s = allSessions.find(s => s.id === id);
+      if (s) s.capacity = val;
+      showToast('✅ Capacity updated to ' + val, 'success');
+    } catch { showToast('Failed to update capacity', 'error'); }
+  }
+
+  async function toggleSession(id, active) {
+    try {
+      const res = await fetch('/api/admin?action=sessions', {
+        method:'PATCH', headers:{'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({id, is_active: active})
+      });
+      if (!res.ok) throw new Error();
+      const s = allSessions.find(s => s.id === id);
+      if (s) s.is_active = active;
+      renderSessionsList(document.querySelector('#page-sessions .tab.active').textContent.toLowerCase().trim());
+      showToast(active ? '✅ Session reactivated' : '⚠️ Session cancelled', active ? 'success' : '');
+    } catch { showToast('Failed to update session', 'error'); }
+  }
+
+  async function deleteSession(id) {
+    if (!confirm('Delete this session? All registrations for this date will also be removed.')) return;
+    try {
+      const res = await fetch('/api/admin?action=sessions', {
+        method:'DELETE', headers:{'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({id})
+      });
+      if (!res.ok) throw new Error();
+      allSessions = allSessions.filter(s => s.id !== id);
+      renderSessionsList(document.querySelector('#page-sessions .tab.active').textContent.toLowerCase().trim());
+      showToast('Session deleted', 'success');
+    } catch { showToast('Failed to delete session', 'error'); }
+  }
+
+  async function generateSessions() {
+    const year = parseInt(document.getElementById('genYear').value);
+    const month = parseInt(document.getElementById('genMonth').value);
+    const capacity = parseInt(document.getElementById('genCapacity').value);
+    if (!confirm(`Generate all Mon/Wed/Fri sessions for ${year}-${String(month).padStart(2,'0')} with capacity ${capacity}?`)) return;
+    try {
+      const res = await fetch('/api/admin?action=sessions', {
+        method:'POST', headers:{'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({action:'generate', year, month, capacity})
+      });
+      if (!res.ok) throw new Error();
+      await loadSessions();
+      renderSessionsList('upcoming');
+      showToast('✅ Sessions generated!', 'success');
+    } catch { showToast('Failed to generate sessions', 'error'); }
+  }
+
+  async function releaseSessionUnpaid(sessionId) {
+    if (!confirm('Release all unpaid registrations older than 24 hours for this session?')) return;
+    try {
+      const res = await fetch('/api/admin?action=registrations', {
+        method:'DELETE', headers:{'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({releaseUnpaid: true, sessionId})
+      });
+      if (!res.ok) throw new Error();
+      await loadRegistrations();
+      showToast('✅ Unpaid spots released', 'success');
+    } catch { showToast('Failed to release spots', 'error'); }
+  }
+
+  async function releaseAllUnpaid() {
+    if (!confirm('Release ALL unpaid registrations older than 24 hours across all sessions?')) return;
+    try {
+      const res = await fetch('/api/admin?action=registrations', {
+        method:'DELETE', headers:{'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({releaseUnpaid: true})
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error();
+      await loadRegistrations();
+      updateDashboard();
+      showToast(`✅ Released ${result.released || 0} unpaid spots`, 'success');
+    } catch { showToast('Failed to release spots', 'error'); }
+  }
+
+  // ── PLAYDATES ──
+  async function loadPlaydates() {
+    try {
+      const res = await fetch('/api/sessions');
+      if (res.ok) {
+        const data = await res.json();
+        allPlaydates = data.filter(s => s.session_type === 'playdate');
+      }
+    } catch { allPlaydates = []; }
+  }
+
+  async function loadRsvps() {
+    try {
+      const res = await fetch('/api/admin?action=rsvps', {headers:{'x-admin':'1'}});
+      if (res.ok) allRsvps = await res.json();
+    } catch { allRsvps = []; }
+  }
+
+  function renderPlaydateCards() {
+    const el = document.getElementById('playdateCards');
+    const today = new Date().toISOString().split('T')[0];
+    const upcoming = allPlaydates.filter(p => p.date >= today).sort((a,b) => new Date(a.date)-new Date(b.date));
+    if (!upcoming.length) {
+      el.innerHTML = '<div class="empty-state"><div class="es-icon">🎉</div><p>No playdates yet. Add one above!</p></div>';
+      return;
     }
-  } catch {}
-  renderSpots(currentSpots, 'dashSpotsGrid');
-}
+    el.innerHTML = upcoming.map(p => {
+      const d = new Date(p.date);
+      const dateLabel = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+      const rsvpCount = allRsvps.filter(r => r.session_id === p.id).length;
+      return `<div class="pd-mgmt-card">
+        <div class="pd-mgmt-date">📅 ${dateLabel}</div>
+        <div class="pd-mgmt-theme">${p.theme || 'Themed Playdate'}</div>
+        ${p.description ? `<div class="pd-mgmt-details">${esc(p.description)}</div>` : ''}
+        ${p.instructions ? `<div class="pd-mgmt-details" style="background:#FFF8DC;border-radius:8px;padding:8px 10px;margin-top:4px"><strong>📋 Instructions:</strong> ${esc(p.instructions)}</div>` : ''}
+        <div class="pd-mgmt-stats">
+          <div class="pd-stat">👥 ${rsvpCount} RSVPs</div>
+          <div class="pd-stat">🎯 Cap: ${p.capacity}</div>
+          ${p.time ? `<div class="pd-stat">⏰ ${p.time}</div>` : ''}
+        </div>
+        <div class="pd-mgmt-actions">
+          <button class="action-btn btn-edit" onclick="editPlaydate(${p.id})">Edit</button>
+          <button class="action-btn btn-delete" onclick="deletePlaydate(${p.id})">Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderRsvpTable() {
+    const tb = document.getElementById('rsvpTableBody');
+    if (!allRsvps.length) { tb.innerHTML = '<tr><td colspan="5" style="color:#888;padding:20px">No RSVPs yet.</td></tr>'; return; }
+    tb.innerHTML = allRsvps.map(r => {
+      const pd = allPlaydates.find(p => p.id === r.session_id);
+      const pdLabel = pd ? (pd.theme || new Date(pd.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})) : '—';
+      return `<tr>
+        <td><strong>${esc(pdLabel)}</strong></td>
+        <td>${esc(r.parent_name)}</td>
+        <td>${esc(r.email)}</td>
+        <td>${r.children}</td>
+        <td style="color:#888;font-size:.8rem">${formatDate(r.created_at)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function savePlaydate() {
+    const date = document.getElementById('pdDate').value;
+    const theme = document.getElementById('pdTheme').value.trim();
+    const capacity = parseInt(document.getElementById('pdCapacity').value) || 30;
+    const time = document.getElementById('pdTime').value.trim();
+    const description = document.getElementById('pdDescription').value.trim();
+    const instructions = document.getElementById('pdInstructions').value.trim();
+    if (!date || !theme) { showToast('Date and theme are required', 'error'); return; }
+
+    try {
+      if (editingPlaydateId) {
+        const res = await fetch('/api/admin?action=sessions', {
+          method:'PATCH', headers:{'Content-Type':'application/json','x-admin':'1'},
+          body: JSON.stringify({id: editingPlaydateId, theme, capacity, time, description, instructions})
+        });
+        if (!res.ok) throw new Error();
+        showToast('✅ Playdate updated!', 'success');
+      } else {
+        const res = await fetch('/api/admin?action=sessions', {
+          method:'POST', headers:{'Content-Type':'application/json','x-admin':'1'},
+          body: JSON.stringify({action:'add_playdate', date, theme, capacity, time, description, instructions})
+        });
+        if (!res.ok) throw new Error();
+        showToast('✅ Playdate added!', 'success');
+      }
+      clearPdForm();
+      await loadPlaydates();
+      renderPlaydateCards();
+    } catch { showToast('Failed to save playdate', 'error'); }
+  }
+
+  function editPlaydate(id) {
+    const p = allPlaydates.find(p => p.id === id);
+    if (!p) return;
+    editingPlaydateId = id;
+    document.getElementById('pdDate').value = p.date;
+    document.getElementById('pdTheme').value = p.theme || '';
+    document.getElementById('pdCapacity').value = p.capacity || 30;
+    document.getElementById('pdTime').value = p.time || '';
+    document.getElementById('pdDescription').value = p.description || '';
+    document.getElementById('pdInstructions').value = p.instructions || '';
+    document.getElementById('pdCancelEdit').style.display = 'inline-block';
+    document.getElementById('pdForm').scrollIntoView({behavior:'smooth'});
+    showToast('Editing playdate — make changes and save', '');
+  }
+
+  function clearPdForm() {
+    editingPlaydateId = null;
+    document.getElementById('pdDate').value = '';
+    document.getElementById('pdTheme').value = '';
+    document.getElementById('pdCapacity').value = '30';
+    document.getElementById('pdTime').value = '';
+    document.getElementById('pdDescription').value = '';
+    document.getElementById('pdInstructions').value = '';
+    document.getElementById('pdCancelEdit').style.display = 'none';
+  }
+
+  async function deletePlaydate(id) {
+    if (!confirm('Delete this playdate and all its RSVPs?')) return;
+    try {
+      const res = await fetch('/api/admin?action=sessions', {
+        method:'DELETE', headers:{'Content-Type':'application/json','x-admin':'1'},
+        body: JSON.stringify({id})
+      });
+      if (!res.ok) throw new Error();
+      allPlaydates = allPlaydates.filter(p => p.id !== id);
+      renderPlaydateCards();
+      showToast('Playdate deleted', 'success');
+    } catch { showToast('Failed to delete playdate', 'error'); }
+  }
+
+  // ── REGISTRATIONS ──
   async function loadRegistrations() {
     try {
       const res = await fetch('/api/admin?action=registrations', {headers:{'x-admin':'1'}});
       if (res.ok) allRegs = await res.json();
     } catch { allRegs = []; }
     renderRecentRegs();
-  }
-
-  async function loadTestimonials() {
-    try {
-      const res = await fetch('/api/admin?action=testimonials', {headers:{'x-admin':'1'}});
-      if (res.ok) allTestimonials = await res.json();
-    } catch { allTestimonials = []; }
-    const pending = allTestimonials.filter(t => t.status === 'pending').length;
-    const badge = document.getElementById('pendingReviewsBadge');
-    badge.textContent = pending;
-    badge.style.display = pending > 0 ? 'inline' : 'none';
-    document.getElementById('ds-reviews').textContent = pending;
-  }
-
-  async function loadGalleryAdmin() {
-    try {
-      const res = await fetch('/api/admin?action=gallery', {headers:{'x-admin':'1'}});
-      if (res.ok) allGallery = await res.json();
-    } catch { allGallery = []; }
-    const pending = allGallery.filter(g => g.status === 'pending' && g.source === 'parent').length;
-    const badge = document.getElementById('pendingGalleryBadge');
-    badge.textContent = pending;
-    badge.style.display = pending > 0 ? 'inline' : 'none';
-    document.getElementById('ds-gallery').textContent = pending;
   }
 
   function updateDashboard() {
@@ -377,95 +823,41 @@
     document.getElementById('ds-unpaid').textContent = total - paid;
   }
 
-  function renderSpots(spots, containerId) {
-    const days = [
-      {key:'monday',label:'Monday',cls:'monday',ages:'Ages 3–6',emoji:'☀️'},
-      {key:'wednesday',label:'Wednesday',cls:'wednesday',ages:'Ages 3–6',emoji:'🌈'},
-      {key:'friday',label:'Friday',cls:'friday',ages:'Ages 7–8',emoji:'⭐'},
-    ];
-    const el = document.getElementById(containerId);
-    el.innerHTML = days.map(d => {
-      const count = spots[d.key] ?? 10;
-      const pct = (count/10)*100;
-      return `
-        <div class="spot-card ${d.cls}">
-          <div class="spot-day">${d.emoji} ${d.label}</div>
-          <div class="spot-ages">${d.ages}</div>
-          <div class="spot-count" id="count-${containerId}-${d.key}">${count}</div>
-          <div class="spot-of">of 10 spots available</div>
-          <div class="spot-controls">
-            <button class="spot-btn" onclick="adjustSpot('${d.key}','${containerId}',-1)">−</button>
-            <input class="spot-input" type="number" min="0" max="10" value="${count}" id="input-${containerId}-${d.key}" onchange="syncInput('${d.key}','${containerId}',this.value)" />
-            <button class="spot-btn" onclick="adjustSpot('${d.key}','${containerId}',1)">+</button>
-          </div>
-          <div class="spot-bar-wrap"><div class="spot-bar" style="width:${pct}%"></div></div>
-          <button class="spot-save" onclick="saveSpot('${d.key}','${containerId}')">Save Changes</button>
-        </div>`;
-    }).join('');
-  }
-
-  function adjustSpot(day, cid, delta) {
-    const input = document.getElementById('input-' + cid + '-' + day);
-    const newVal = Math.min(10, Math.max(0, parseInt(input.value||0) + delta));
-    input.value = newVal;
-    document.getElementById('count-' + cid + '-' + day).textContent = newVal;
-  }
-
-  function syncInput(day, cid, val) {
-    const v = Math.min(10, Math.max(0, parseInt(val||0)));
-    document.getElementById('count-' + cid + '-' + day).textContent = v;
-    document.getElementById('input-' + cid + '-' + day).value = v;
-  }
-
-  async function saveSpot(day, cid) {
-  const val = parseInt(document.getElementById('input-' + cid + '-' + day).value);
-  try {
-    const res = await fetch('/api/admin?action=sessions', {
-      method: 'PATCH',
-      headers: {'Content-Type':'application/json','x-admin':'1'},
-      body: JSON.stringify({ day_of_week: day, capacity: val })
-    });
-    if (!res.ok) throw new Error();
-    currentSpots[day] = val;
-    showToast('✅ ' + day.charAt(0).toUpperCase()+day.slice(1) + ' updated to ' + val, 'success');
-  } catch { showToast('Failed to save spots', 'error'); }
-}
-
-  async function resetAllSpots(val) {
-    if (!confirm('Set all classes to ' + val + ' spots?')) return;
-    for (const day of ['monday','wednesday','friday']) {
-      document.getElementById('input-spotsGrid-' + day).value = val;
-      document.getElementById('count-spotsGrid-' + day).textContent = val;
-      await saveSpot(day, 'spotsGrid');
-    }
-  }
-
   function renderRecentRegs() {
     const recent = [...allRegs].sort((a,b) => new Date(b.created_at)-new Date(a.created_at)).slice(0,5);
     const tb = document.getElementById('recentRegTable');
     if (!recent.length) { tb.innerHTML = '<tr><td colspan="5" style="color:#888;padding:20px">No registrations yet.</td></tr>'; return; }
-    tb.innerHTML = `<thead><tr><th>Parent</th><th>Child</th><th>Day</th><th>Package</th><th>Status</th></tr></thead>` +
-      recent.map(r => `<tr>
-        <td>${esc(r.parent_first)} ${esc(r.parent_last)}</td>
-        <td>${esc(r.child_first)}, age ${r.child_age}</td>
-        <td><span class="badge-day badge-${r.class_day}">${r.class_day}</span></td>
-        <td>${pkgLabel(r.package)}</td>
-        <td>${r.paid ? '<span class="badge-paid">Paid</span>' : '<span class="badge-unpaid">Unpaid</span>'}</td>
-      </tr>`).join('');
+    tb.innerHTML = `<thead><tr><th>Parent</th><th>Child</th><th>Date</th><th>Package</th><th>Status</th></tr></thead>` +
+      recent.map(r => {
+        const session = r.class_sessions;
+        const dateLabel = session ? new Date(session.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+        return `<tr>
+          <td>${esc(r.parent_first)} ${esc(r.parent_last)}</td>
+          <td>${esc(r.child_first)}, age ${r.child_age}</td>
+          <td>${dateLabel} <span class="badge badge-${session?.day_of_week||''}">${session?.day_of_week||''}</span></td>
+          <td>${pkgLabel(r.package)}</td>
+          <td>${r.paid ? '<span class="badge badge-paid">Paid</span>' : '<span class="badge badge-unpaid">Unpaid</span>'}</td>
+        </tr>`;
+      }).join('');
   }
 
   function renderRegistrations(regs) {
     const tb = document.getElementById('regTableBody');
-    if (!regs.length) { tb.innerHTML = '<tr><td colspan="7" style="color:#888;padding:20px">No registrations found.</td></tr>'; return; }
-    tb.innerHTML = regs.map(r => `<tr>
-      <td><strong>${esc(r.parent_first)} ${esc(r.parent_last)}</strong><br><small style="color:#888">${esc(r.email)}</small>${r.phone ? '<br><small style="color:#aaa">'+esc(r.phone)+'</small>' : ''}</td>
-      <td>${esc(r.child_first)}, age ${r.child_age}</td>
-      <td><span class="badge-day badge-${r.class_day}">${r.class_day}</span></td>
-      <td>${pkgLabel(r.package)}</td>
-      <td id="paid-badge-${r.id}">${r.paid ? '<span class="badge-paid">✓ Paid</span>' : '<span class="badge-unpaid" onclick="togglePaid('+r.id+',false)">Unpaid — click to mark paid</span>'}</td>
-      <td style="color:#888;font-size:.8rem">${formatDate(r.created_at)}</td>
-      <td><button class="action-btn btn-delete" onclick="deleteReg(${r.id})">Delete</button></td>
-    </tr>`).join('');
+    if (!regs.length) { tb.innerHTML = '<tr><td colspan="8" style="color:#888;padding:20px">No registrations found.</td></tr>'; return; }
+    tb.innerHTML = regs.map(r => {
+      const session = r.class_sessions;
+      const dateLabel = session ? new Date(session.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+      return `<tr>
+        <td><strong>${esc(r.parent_first)} ${esc(r.parent_last)}</strong><br><small style="color:#888">${esc(r.email)}</small>${r.phone?`<br><small style="color:#aaa">${esc(r.phone)}</small>`:''}</td>
+        <td>${esc(r.child_first)}, age ${r.child_age}</td>
+        <td>${dateLabel}</td>
+        <td><span class="badge badge-${session?.day_of_week||''}">${session?.day_of_week||'—'}</span></td>
+        <td>${pkgLabel(r.package)}</td>
+        <td>${r.paid ? '<span class="badge badge-paid">✓ Paid</span>' : `<span class="badge badge-unpaid" onclick="togglePaid(${r.id},false)">Unpaid — click to mark paid</span>`}</td>
+        <td style="color:#888;font-size:.8rem">${formatDate(r.created_at)}</td>
+        <td><button class="action-btn btn-delete" onclick="deleteReg(${r.id})">Delete</button></td>
+      </tr>`;
+    }).join('');
   }
 
   async function togglePaid(id, currentlyPaid) {
@@ -480,7 +872,7 @@
   }
 
   async function deleteReg(id) {
-    if (!confirm('Delete this registration and restore the spot?')) return;
+    if (!confirm('Delete this registration?')) return;
     try {
       await fetch('/api/admin?action=registrations', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
       allRegs = allRegs.filter(r => r.id !== id);
@@ -493,11 +885,24 @@
   function filterRegs(filter, tab) {
     document.querySelectorAll('#page-registrations .tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    const filtered = filter === 'all' ? allRegs
-      : filter === 'unpaid' ? allRegs.filter(r => !r.paid)
-      : filter === 'paid'   ? allRegs.filter(r => r.paid)
-      : allRegs.filter(r => r.class_day === filter);
+    const filtered = filter==='all' ? allRegs
+      : filter==='unpaid' ? allRegs.filter(r=>!r.paid)
+      : filter==='paid'   ? allRegs.filter(r=>r.paid)
+      : allRegs.filter(r=>r.class_sessions?.day_of_week===filter);
     renderRegistrations(filtered);
+  }
+
+  // ── TESTIMONIALS ──
+  async function loadTestimonials() {
+    try {
+      const res = await fetch('/api/admin?action=testimonials', {headers:{'x-admin':'1'}});
+      if (res.ok) allTestimonials = await res.json();
+    } catch { allTestimonials = []; }
+    const pending = allTestimonials.filter(t => t.status==='pending').length;
+    const badge = document.getElementById('pendingReviewsBadge');
+    badge.textContent = pending;
+    badge.style.display = pending > 0 ? 'inline' : 'none';
+    document.getElementById('ds-reviews').textContent = pending;
   }
 
   function renderTestimonials(reviews) {
@@ -507,12 +912,12 @@
       <td><strong>${esc(r.reviewer_name)}</strong><br><small style="color:#888">${r.age_group}</small></td>
       <td><span class="review-stars">${'⭐'.repeat(r.rating)}</span></td>
       <td><div class="review-preview">${esc(r.review_text)}</div></td>
-      <td>${r.media_urls && r.media_urls.length ? r.media_urls.map(u => u.match(/\.(mp4|mov)/i) ? '<span style="font-size:1.2rem">▶</span>' : `<img class="media-thumb" src="${u}" />`).join(' ') : '<span style="color:#ccc">—</span>'}</td>
-      <td>${r.status === 'pending' ? '<span class="badge-pending">Pending</span>' : r.status === 'approved' ? '<span class="badge-approved">Approved</span>' : '<span class="badge-unpaid">Rejected</span>'}</td>
+      <td>${r.media_urls&&r.media_urls.length?r.media_urls.map(u=>u.match(/\.(mp4|mov)/i)?'<span>▶</span>':`<img class="media-thumb" src="${u}" />`).join(' '):'<span style="color:#ccc">—</span>'}</td>
+      <td><span class="badge badge-${r.status}">${r.status}</span></td>
       <td style="color:#888;font-size:.8rem">${formatDate(r.created_at)}</td>
-      <td style="display:flex;gap:6px;flex-wrap:wrap">
-        ${r.status !== 'approved' ? `<button class="action-btn btn-approve" onclick="moderateReview(${r.id},'approved')">Approve</button>` : ''}
-        ${r.status !== 'rejected' ? `<button class="action-btn btn-reject" onclick="moderateReview(${r.id},'rejected')">Reject</button>` : ''}
+      <td class="actions-col">
+        ${r.status!=='approved'?`<button class="action-btn btn-approve" onclick="moderateReview(${r.id},'approved')">Approve</button>`:''}
+        ${r.status!=='rejected'?`<button class="action-btn btn-reject" onclick="moderateReview(${r.id},'rejected')">Reject</button>`:''}
       </td>
     </tr>`).join('');
   }
@@ -520,7 +925,7 @@
   async function moderateReview(id, status) {
     try {
       await fetch('/api/admin?action=testimonials', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
-      const t = allTestimonials.find(t => t.id === id);
+      const t = allTestimonials.find(t => t.id===id);
       if (t) t.status = status;
       filterTestimonials(document.querySelector('#page-reviews .tab.active').textContent.toLowerCase().trim(), document.querySelector('#page-reviews .tab.active'));
       loadTestimonials();
@@ -531,23 +936,36 @@
   function filterTestimonials(filter, tab) {
     document.querySelectorAll('#page-reviews .tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    const filtered = filter === 'all' ? allTestimonials : allTestimonials.filter(t => t.status === filter);
+    const filtered = filter==='all' ? allTestimonials : allTestimonials.filter(t => t.status===filter);
     renderTestimonials(filtered);
+  }
+
+  // ── GALLERY ──
+  async function loadGalleryAdmin() {
+    try {
+      const res = await fetch('/api/admin?action=gallery', {headers:{'x-admin':'1'}});
+      if (res.ok) allGallery = await res.json();
+    } catch { allGallery = []; }
+    const pending = allGallery.filter(g => g.status==='pending'&&g.source==='parent').length;
+    const badge = document.getElementById('pendingGalleryBadge');
+    badge.textContent = pending;
+    badge.style.display = pending > 0 ? 'inline' : 'none';
+    document.getElementById('ds-gallery').textContent = pending;
   }
 
   function renderGalleryAdmin(items) {
     const tb = document.getElementById('galleryTableBody');
-    if (!items.length) { tb.innerHTML = '<tr><td colspan="7" style="color:#888;padding:20px">No gallery submissions in this category.</td></tr>'; return; }
+    if (!items.length) { tb.innerHTML = '<tr><td colspan="7" style="color:#888;padding:20px">No gallery submissions.</td></tr>'; return; }
     tb.innerHTML = items.map(g => `<tr>
-      <td><strong>${esc(g.submitted_by || 'Owner')}</strong></td>
-      <td>${esc(g.caption || '—')}</td>
-      <td>${g.url ? (g.type === 'video' ? '<span style="font-size:1.4rem">▶</span>' : `<img class="media-thumb" src="${g.url}" />`) : '—'}</td>
-      <td>${g.category || '—'}</td>
-      <td>${g.status === 'pending' ? '<span class="badge-pending">Pending</span>' : g.status === 'approved' ? '<span class="badge-approved">Approved</span>' : '<span class="badge-unpaid">Rejected</span>'}</td>
+      <td><strong>${esc(g.submitted_by||'Owner')}</strong></td>
+      <td>${esc(g.caption||'—')}</td>
+      <td>${g.url?(g.type==='video'?'<span style="font-size:1.4rem">▶</span>':`<img class="media-thumb" src="${g.url}" />`):'—'}</td>
+      <td>${g.category||'—'}</td>
+      <td><span class="badge badge-${g.status}">${g.status}</span></td>
       <td style="color:#888;font-size:.8rem">${formatDate(g.created_at)}</td>
-      <td style="display:flex;gap:6px;flex-wrap:wrap">
-        ${g.status !== 'approved' ? `<button class="action-btn btn-approve" onclick="moderateGallery(${g.id},'approved')">Approve</button>` : ''}
-        ${g.status !== 'rejected' ? `<button class="action-btn btn-reject" onclick="moderateGallery(${g.id},'rejected')">Reject</button>` : ''}
+      <td class="actions-col">
+        ${g.status!=='approved'?`<button class="action-btn btn-approve" onclick="moderateGallery(${g.id},'approved')">Approve</button>`:''}
+        ${g.status!=='rejected'?`<button class="action-btn btn-reject" onclick="moderateGallery(${g.id},'rejected')">Reject</button>`:''}
         <button class="action-btn btn-delete" onclick="deleteGallery(${g.id})">Delete</button>
       </td>
     </tr>`).join('');
@@ -556,7 +974,7 @@
   async function moderateGallery(id, status) {
     try {
       await fetch('/api/admin?action=gallery', {method:'PATCH',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id,status})});
-      const g = allGallery.find(g => g.id === id);
+      const g = allGallery.find(g => g.id===id);
       if (g) g.status = status;
       filterGalleryAdmin(document.querySelector('#page-gallery .tab.active').textContent.toLowerCase().trim(), document.querySelector('#page-gallery .tab.active'));
       loadGalleryAdmin();
@@ -568,7 +986,7 @@
     if (!confirm('Delete this media item?')) return;
     try {
       await fetch('/api/admin?action=gallery', {method:'DELETE',headers:{'Content-Type':'application/json','x-admin':'1'},body:JSON.stringify({id})});
-      allGallery = allGallery.filter(g => g.id !== id);
+      allGallery = allGallery.filter(g => g.id!==id);
       filterGalleryAdmin('all', document.querySelector('#page-gallery .tab:last-child'));
       showToast('Media deleted', 'success');
     } catch { showToast('Failed to delete', 'error'); }
@@ -577,8 +995,7 @@
   function filterGalleryAdmin(filter, tab) {
     document.querySelectorAll('#page-gallery .tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    const filtered = filter === 'all' ? allGallery.filter(g => g.source === 'parent')
-      : allGallery.filter(g => g.source === 'parent' && g.status === filter);
+    const filtered = filter==='all' ? allGallery.filter(g=>g.source==='parent') : allGallery.filter(g=>g.source==='parent'&&g.status===filter);
     renderGalleryAdmin(filtered);
   }
 
@@ -595,9 +1012,7 @@
         img.style.cssText = 'width:100%;height:100%;object-fit:cover';
         div.appendChild(img);
       } else {
-        div.style.background = 'var(--dark)';
-        div.style.display = 'flex'; div.style.alignItems = 'center'; div.style.justifyContent = 'center';
-        div.style.color = '#fff'; div.style.fontSize = '1.5rem';
+        div.style.cssText += ';background:var(--dark);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem';
         div.textContent = '▶';
       }
       preview.appendChild(div);
@@ -605,47 +1020,42 @@
   }
 
   const uz = document.getElementById('adminUploadZone');
-  uz.addEventListener('dragover', e => { e.preventDefault(); uz.style.borderColor = 'var(--coral)'; });
-  uz.addEventListener('dragleave', () => uz.style.borderColor = '');
-  uz.addEventListener('drop', e => { e.preventDefault(); uz.style.borderColor = ''; handleAdminUpload(e.dataTransfer.files); });
+  uz.addEventListener('dragover', e => { e.preventDefault(); uz.style.borderColor='var(--coral)'; });
+  uz.addEventListener('dragleave', () => uz.style.borderColor='');
+  uz.addEventListener('drop', e => { e.preventDefault(); uz.style.borderColor=''; handleAdminUpload(e.dataTransfer.files); });
 
   async function uploadAdminMedia() {
-  if (!adminFiles.length) { showToast('Please select files to upload', 'error'); return; }
-  const caption = document.getElementById('adminCaption').value;
-  const category = document.getElementById('adminCategory').value;
-  try {
-    // Get Supabase credentials
-    const tokenRes = await fetch('/api/sessions?action=storage-token');
-    const { url, anonKey } = await tokenRes.json();
-    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
-    const sb = createClient(url, anonKey);
+    if (!adminFiles.length) { showToast('Please select files to upload', 'error'); return; }
+    const caption = document.getElementById('adminCaption').value;
+    const category = document.getElementById('adminCategory').value;
+    try {
+      const tokenRes = await fetch('/api/sessions?action=storage-token');
+      const { url, anonKey } = await tokenRes.json();
+      const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+      const sb = createClient(url, anonKey);
+      for (const file of adminFiles) {
+        const ext = file.name.split('.').pop();
+        const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error: upErr } = await sb.storage.from('media').upload(path, file, {contentType: file.type});
+        if (upErr) { showToast('Upload failed: ' + upErr.message, 'error'); continue; }
+        const { data: urlData } = sb.storage.from('media').getPublicUrl(path);
+        await fetch('/api/admin?action=gallery', {
+          method:'POST', headers:{'Content-Type':'application/json','x-admin':'1'},
+          body: JSON.stringify({url: urlData.publicUrl, type: file.type.startsWith('video')?'video':'image', caption, category, source:'owner'})
+        });
+      }
+      adminFiles = [];
+      document.getElementById('adminUploadPreview').innerHTML = '';
+      document.getElementById('adminCaption').value = '';
+      await loadGalleryAdmin();
+      showToast('Media uploaded and published!', 'success');
+    } catch(err) { showToast('Upload failed: ' + err.message, 'error'); }
+  }
 
-    for (const file of adminFiles) {
-      const ext = file.name.split('.').pop();
-      const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error: upErr } = await sb.storage.from('media').upload(path, file, { contentType: file.type });
-      if (upErr) { showToast('Upload failed: ' + upErr.message, 'error'); continue; }
-      const { data: urlData } = sb.storage.from('media').getPublicUrl(path);
-      const type = file.type.startsWith('video') ? 'video' : 'image';
-      await fetch('/api/admin?action=gallery', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','x-admin':'1'},
-        body: JSON.stringify({ url: urlData.publicUrl, type, caption, category, source: 'owner' })
-      });
-    }
-
-    adminFiles = [];
-    document.getElementById('adminUploadPreview').innerHTML = '';
-    document.getElementById('adminCaption').value = '';
-    await loadGalleryAdmin();
-    showToast('Media uploaded and published!', 'success');
-  } catch(err) { showToast('Upload failed: ' + err.message, 'error'); }
-}
-
-  function pkgLabel(p) { return {single:'Single ($40)','3class':'3-Class ($110)','4class':'4-Class ($140)'}[p] || p; }
+  // ── HELPERS ──
+  function pkgLabel(p) { return {single:'Single ($40)','3class':'3-Class ($110)','4class':'4-Class ($140)'}[p]||p; }
   function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
-
+  function formatDate(d) { return d?new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—'; }
   function showToast(msg, type='') {
     const t = document.getElementById('toast');
     t.textContent = msg;

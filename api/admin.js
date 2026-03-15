@@ -57,10 +57,14 @@ export default async function handler(req, res) {
     }
     if (req.method === 'PATCH') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-      const { id, capacity, is_active, day_of_week } = body;
+      const { id, capacity, is_active, day_of_week, theme, time, description, instructions } = body;
       const updates = {};
       if (capacity !== undefined) updates.capacity = capacity;
       if (is_active !== undefined) updates.is_active = is_active;
+      if (theme !== undefined) updates.theme = theme;
+      if (time !== undefined) updates.time = time;
+      if (description !== undefined) updates.description = description;
+      if (instructions !== undefined) updates.instructions = instructions;
       if (day_of_week && !id) {
         const { error } = await supabase
           .from('class_sessions')
@@ -162,6 +166,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
   }
-
+  if (action === 'rsvps') {
+    if (req.method === 'GET') {
+      const { data, error } = await supabase
+        .from('playdate_rsvps').select('*').order('created_at', { ascending: false });
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json(data);
+    }
+  }
   return res.status(400).json({ error: 'Invalid action' });
 }
