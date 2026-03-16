@@ -300,7 +300,7 @@
 
   try {
     // Step 1 — get Supabase credentials
-    const tokenRes = await fetch('/api/storage-token');
+    const tokenRes = await fetch('/api/sessions?action=storage-token');
     const { url, anonKey } = await tokenRes.json();
 
     // Step 2 — upload files directly to Supabase from browser
