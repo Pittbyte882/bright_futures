@@ -11,11 +11,11 @@
     { "src": "/admin",                   "dest": "/admin.html" },
     { "src": "/about",                   "dest": "/about.html" },
     { "src": "/gallery",                 "dest": "/gallery.html" },
-    
+    { "src": "/testimonials",            "dest": "/testimonial.html" },
     { "src": "/admin.html",              "dest": "/admin.html" },
     { "src": "/about.html",              "dest": "/about.html" },
     { "src": "/gallery.html",            "dest": "/gallery.html" },
-    { "src": "/testimonial.html",       "dest": "/testimonial.html" },
+    { "src": "/testimonial.html",        "dest": "/testimonial.html" },
     { "src": "/",                        "dest": "/index.html" },
     { "src": "/logobf.png",              "dest": "/logobf.png" },
     { "src": "/(.*)",                    "dest": "/index.html" }
