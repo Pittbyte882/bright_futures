@@ -178,8 +178,81 @@
     .inline-input:focus { border-color:var(--sky); }
     .actions-col { display:flex; gap:6px; flex-wrap:wrap; }
 
-    @media(max-width:900px){ .session-row{grid-template-columns:1fr 1fr;} }
-    @media(max-width:768px){ .sidebar{transform:translateX(-100%);} .main{margin-left:0;padding:20px;} .pd-form{grid-template-columns:1fr;} }
+    @media(max-width:900px){
+  .session-row { grid-template-columns:1fr 1fr; gap:8px; }
+}
+
+    @media(max-width:768px){
+      /* Sidebar becomes bottom nav on mobile */
+      .sidebar {
+        width:100%;
+        min-height:auto;
+        height:60px;
+        position:fixed;
+        top:auto;
+        bottom:0;
+        left:0;
+        flex-direction:row;
+        z-index:200;
+        border-top:1px solid rgba(255,255,255,0.1);
+      }
+      .sidebar-logo { display:none; }
+      .sidebar-footer { display:none; }
+      .sidebar-nav {
+        flex:1;
+        display:flex;
+        flex-direction:row;
+        padding:0;
+        overflow-x:auto;
+        align-items:center;
+      }
+      .nav-item {
+        flex-direction:column;
+        gap:2px;
+        padding:8px 12px;
+        font-size:0.6rem;
+        border-left:none;
+        border-top:3px solid transparent;
+        min-width:60px;
+        text-align:center;
+        flex-shrink:0;
+      }
+      .nav-item.active { border-left:none; border-top-color:var(--sun); }
+      .nav-item .ni-icon { font-size:1.3rem; width:auto; }
+      .nav-badge { display:none; }
+
+      /* Main content needs bottom padding so it doesn't hide behind nav */
+      .main {
+        margin-left:0;
+        padding:16px 16px 80px;
+      }
+
+      /* Add a top bar with logout and title */
+      .mobile-topbar {
+        display:flex !important;
+        align-items:center;
+        justify-content:space-between;
+        background:var(--dark);
+        padding:12px 16px;
+        margin:-16px -16px 16px;
+        position:sticky;
+        top:0;
+        z-index:100;
+      }
+
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .panel { padding:16px; }
+  .panel-header { flex-direction:column; align-items:flex-start; }
+  .pd-form { grid-template-columns:1fr; }
+  .gen-grid { grid-template-columns:1fr 1fr; }
+  .table-wrap { font-size:0.78rem; }
+  th, td { padding:8px 10px; }
+  .session-row { grid-template-columns:1fr; }
+  .playdate-cards { grid-template-columns:1fr; }
+
+  /* Login screen */
+  .login-box { padding:32px 24px; }
+}
   </style>
 </head>
 <body>
@@ -217,6 +290,11 @@
   </aside>
 
   <main class="main">
+    <div class="mobile-topbar" style="display:none">
+  <img src="logobf.png" style="height:36px;width:auto;" />
+  <span style="color:#fff;font-family:'Fredoka',sans-serif;font-size:1.1rem;" id="mobilePageTitle">Dashboard</span>
+  <button onclick="logout()" style="background:rgba(232,58,46,0.2);color:var(--coral);border:1px solid rgba(232,58,46,0.3);border-radius:50px;padding:6px 14px;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:800;cursor:pointer;">Sign Out</button>
+</div>
 
     <!-- ── DASHBOARD ── -->
     <div class="admin-page active" id="page-dashboard">
@@ -471,21 +549,26 @@
   }
 
   // ── PAGE NAV ──
-  async function showPage(name) {
-    document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    const navMap = {dashboard:'dash',sessions:'class',playdates:'play',registrations:'regi',reviews:'revi',gallery:'gall'};
-    document.querySelectorAll('.nav-item').forEach(n => {
-      if (n.textContent.trim().toLowerCase().startsWith(navMap[name]||name.slice(0,4))) n.classList.add('active');
-    });
-    if (name === 'sessions') { await loadSessions(); renderSessionsList('upcoming'); }
-    if (name === 'playdates') { await loadPlaydates(); renderPlaydateCards(); await loadRsvps(); renderRsvpTable(); }
-    if (name === 'registrations') renderRegistrations(allRegs);
-    if (name === 'reviews') renderTestimonials(allTestimonials.filter(t => t.status === 'pending'));
-    if (name === 'gallery') renderGalleryAdmin(allGallery.filter(g => g.status === 'pending' && g.source === 'parent'));
-    if (name === 'dashboard') renderDashSessions();
-  }
+  // ── PAGE NAV ──
+async function showPage(name) {
+  const titles = {dashboard:'Dashboard',sessions:'Sessions',playdates:'Playdates',registrations:'Registrations',reviews:'Reviews',gallery:'Gallery'};
+  const titleEl = document.getElementById('mobilePageTitle');
+  if (titleEl) titleEl.textContent = titles[name] || name;
+
+  document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const navMap = {dashboard:'dash',sessions:'class',playdates:'play',registrations:'regi',reviews:'revi',gallery:'gall'};
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.textContent.trim().toLowerCase().startsWith(navMap[name]||name.slice(0,4))) n.classList.add('active');
+  });
+  if (name === 'sessions') { await loadSessions(); renderSessionsList('upcoming'); }
+  if (name === 'playdates') { await loadPlaydates(); renderPlaydateCards(); await loadRsvps(); renderRsvpTable(); }
+  if (name === 'registrations') renderRegistrations(allRegs);
+  if (name === 'reviews') renderTestimonials(allTestimonials.filter(t => t.status === 'pending'));
+  if (name === 'gallery') renderGalleryAdmin(allGallery.filter(g => g.status === 'pending' && g.source === 'parent'));
+  if (name === 'dashboard') renderDashSessions();
+}
 
   // ── LOAD ALL ──
   async function loadAll() {
