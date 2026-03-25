@@ -367,6 +367,36 @@
         <div id="sessionsList">Loading...</div>
       </div>
     </div>
+     <!-- ── Add Single Class  ── -->
+      <div class="panel">
+  <div class="panel-header"><div class="panel-title">➕ Add a Single Class</div></div>
+  <div class="gen-grid">
+    <div class="form-group">
+      <label>Date *</label>
+      <input type="date" id="addClassDate" class="inline-input" />
+    </div>
+    <div class="form-group">
+      <label>Class Title (optional)</label>
+      <input type="text" id="addClassTitle" class="inline-input" placeholder="e.g. Spring Art Day" />
+    </div>
+    <div class="form-group">
+      <label>Age Group</label>
+      <select id="addClassAgeGroup" class="inline-input">
+        <option value="3-6">Ages 3–6</option>
+        <option value="7-8">Ages 7–8</option>
+        <option value="all">All Ages</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Capacity</label>
+      <input type="number" id="addClassCapacity" class="inline-input" value="10" min="1" max="50" />
+    </div>
+    <div class="form-group">
+      <label>&nbsp;</label>
+      <button class="panel-action btn-sky" onclick="addSingleClass()">Add Class →</button>
+    </div>
+  </div>
+</div>
 
     <!-- ── PLAYDATES ── -->
     <div class="admin-page" id="page-playdates">
@@ -406,7 +436,7 @@
           </div>
         </div>
       </div>
-
+   
       <div class="panel">
         <div class="panel-header"><div class="panel-title">🎉 Upcoming Playdates</div></div>
         <div class="playdate-cards" id="playdateCards">
@@ -615,51 +645,59 @@ async function showPage(name) {
   }
 
   function renderSessionsList(filter) {
-    const el = document.getElementById('sessionsList');
-    const today = new Date().toISOString().split('T')[0];
-    let filtered = allSessions;
-    if (filter === 'upcoming') filtered = allSessions.filter(s => s.date >= today);
-    if (filter === 'cancelled') filtered = allSessions.filter(s => !s.is_active);
-    if (!filtered.length) { el.innerHTML = '<div class="empty-state"><div class="es-icon">📅</div><p>No sessions found.</p></div>'; return; }
+  const el = document.getElementById('sessionsList');
+  const today = new Date().toISOString().split('T')[0];
+  let filtered = allSessions;
+  if (filter === 'upcoming') filtered = allSessions.filter(s => s.date >= today);
+  if (filter === 'cancelled') filtered = allSessions.filter(s => !s.is_active);
+  if (!filtered.length) { el.innerHTML = '<div class="empty-state"><div class="es-icon">📅</div><p>No sessions found.</p></div>'; return; }
 
-    // Group by month
-    const grouped = {};
-    filtered.forEach(s => {
-      const key = s.date.slice(0,7);
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(s);
-    });
+  const grouped = {};
+  filtered.forEach(s => {
+    const key = s.date.slice(0,7);
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(s);
+  });
 
-    el.innerHTML = Object.keys(grouped).sort().map(monthKey => {
-      const monthLabel = new Date(monthKey + '-02').toLocaleDateString('en-US',{month:'long',year:'numeric'});
-      const rows = grouped[monthKey].map(s => {
-        const remaining = parseInt(s.spots_remaining);
-        const spotsClass = remaining <= 0 ? 'full' : remaining <= 3 ? 'almost' : '';
-        const spotsLabel = remaining <= 0 ? 'FULL' : `${remaining} of ${s.capacity}`;
-        const d = new Date(s.date);
-        const dateLabel = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-        return `<div class="session-row ${s.is_active ? '' : 'cancelled'}">
-          <div><div class="session-date">${dateLabel}</div><div class="session-dow">${s.day_of_week} · Ages ${s.age_group}</div></div>
-          <div><span class="badge badge-${s.day_of_week}">${s.day_of_week}</span></div>
-          <div><span class="badge ${s.is_active ? 'badge-active' : 'badge-cancelled'}">${s.is_active ? 'Active' : 'Cancelled'}</span></div>
-          <div><span class="spots-mini ${spotsClass}">${spotsLabel} spots</span></div>
-          <div style="display:flex;gap:4px;align-items:center">
-            <input class="capacity-input" type="number" value="${s.capacity}" min="1" max="100" id="cap-${s.id}" />
-            <button class="capacity-save" onclick="saveCapacity(${s.id})">Save</button>
-          </div>
-          <div></div>
-          <div class="session-actions">
-            <button class="action-btn btn-release" onclick="releaseSessionUnpaid(${s.id})">🔓 Unpaid</button>
-            ${s.is_active
-              ? `<button class="action-btn btn-cancel" onclick="toggleSession(${s.id},false)">Cancel</button>`
-              : `<button class="action-btn btn-activate" onclick="toggleSession(${s.id},true)">Reactivate</button>`}
-            <button class="action-btn btn-delete" onclick="deleteSession(${s.id})">Delete</button>
-          </div>
-        </div>`;
-      }).join('');
-      return `<div class="session-month-header">${monthLabel}</div>${rows}`;
+  el.innerHTML = Object.keys(grouped).sort().map(monthKey => {
+    const monthLabel = new Date(monthKey + '-02').toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    const rows = grouped[monthKey].map(s => {
+      const remaining = parseInt(s.spots_remaining);
+      const spotsClass = remaining <= 0 ? 'full' : remaining <= 3 ? 'almost' : '';
+      const spotsLabel = remaining <= 0 ? 'FULL' : `${remaining} of ${s.capacity}`;
+      const d = new Date(s.date);
+      const dateLabel = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      return `<div class="session-row ${s.is_active ? '' : 'cancelled'}">
+        <div>
+          <div class="session-date">${dateLabel}</div>
+          <div class="session-dow">${s.day_of_week} · Ages ${s.age_group}</div>
+          <input class="inline-input" style="margin-top:4px;width:100%;font-size:.78rem" type="text"
+            placeholder="Add title..." value="${esc(s.title||'')}" id="title-${s.id}"
+            onblur="saveTitle(${s.id})" />
+        </div>
+        <div><span class="badge badge-${s.day_of_week}">${s.day_of_week}</span></div>
+        <div><span class="badge ${s.is_active ? 'badge-active' : 'badge-cancelled'}">${s.is_active ? 'Active' : 'Cancelled'}</span></div>
+        <div><span class="spots-mini ${spotsClass}">${spotsLabel} spots</span></div>
+        <div style="display:flex;gap:4px;align-items:center">
+          <input class="capacity-input" type="number" value="${s.capacity}" min="1" max="100" id="cap-${s.id}" />
+          <button class="capacity-save" onclick="saveCapacity(${s.id})">Save</button>
+        </div>
+        <div></div>
+        <div class="session-actions">
+          <button class="action-btn btn-release" onclick="releaseSessionUnpaid(${s.id})">🔓 Unpaid</button>
+          ${s.is_active
+            ? `<button class="action-btn btn-cancel" onclick="toggleSession(${s.id},false)">Cancel</button>`
+            : `<button class="action-btn btn-activate" onclick="toggleSession(${s.id},true)">Reactivate</button>`}
+          <button class="action-btn btn-delete" onclick="deleteSession(${s.id})">Delete</button>
+        </div>
+      </div>`;
     }).join('');
-  }
+    return `<div class="session-month-header">${monthLabel}</div>${rows}`;
+  }).join('');
+}
+
+    
+
 
   function filterSessions(filter, tab) {
     document.querySelectorAll('#page-sessions .tab').forEach(t => t.classList.remove('active'));
@@ -1134,7 +1172,39 @@ async function showPage(name) {
       showToast('Media uploaded and published!', 'success');
     } catch(err) { showToast('Upload failed: ' + err.message, 'error'); }
   }
+async function addSingleClass() {
+  const date = document.getElementById('addClassDate').value;
+  const title = document.getElementById('addClassTitle').value.trim();
+  const ageGroup = document.getElementById('addClassAgeGroup').value;
+  const capacity = parseInt(document.getElementById('addClassCapacity').value) || 10;
+  if (!date) { showToast('Please select a date', 'error'); return; }
+  try {
+    const res = await fetch('/api/admin?action=sessions', {
+      method:'POST', headers:{'Content-Type':'application/json','x-admin':'1'},
+      body: JSON.stringify({action:'add_class', date, title, age_group: ageGroup, capacity})
+    });
+    if (!res.ok) throw new Error();
+    document.getElementById('addClassDate').value = '';
+    document.getElementById('addClassTitle').value = '';
+    await loadSessions();
+    renderSessionsList('upcoming');
+    showToast('✅ Class added!', 'success');
+  } catch { showToast('Failed to add class', 'error'); }
+}
 
+async function saveTitle(id) {
+  const title = document.getElementById('title-' + id)?.value.trim();
+  if (title === undefined) return;
+  try {
+    await fetch('/api/admin?action=sessions', {
+      method:'PATCH', headers:{'Content-Type':'application/json','x-admin':'1'},
+      body: JSON.stringify({id, title})
+    });
+    const s = allSessions.find(s => s.id === id);
+    if (s) s.title = title;
+    if (title) showToast('✅ Title saved', 'success');
+  } catch { showToast('Failed to save title', 'error'); }
+}
   // ── HELPERS ──
   function pkgLabel(p) { return {single:'Single ($40)','3class':'3-Class ($110)','4class':'4-Class ($140)'}[p]||p; }
   function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
