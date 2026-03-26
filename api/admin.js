@@ -49,16 +49,24 @@ if (action === 'sessions') {
     }
 
     if (act === 'add_playdate') {
-      const dow = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-      const { error } = await supabase.from('class_sessions').insert([{
-        date, day_of_week: dow, age_group: 'all',
-        capacity: capacity || 30, session_type: 'playdate',
-        theme: theme || '', title: title || ''
-      }]);
-      if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json({ ok: true });
-    }
-
+  const dow = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+  const insertData = {
+    date,
+    day_of_week: dow,
+    age_group: 'all',
+    capacity: capacity || 30,
+    session_type: 'playdate',
+    theme: theme || '',
+    title: title || '',
+    is_active: true
+  };
+  console.log('Inserting playdate:', JSON.stringify(insertData));
+  const { data, error } = await supabase.from('class_sessions').insert([insertData]).select();
+  console.log('Insert result data:', JSON.stringify(data));
+  console.log('Insert result error:', JSON.stringify(error));
+  if (error) return res.status(500).json({ error: error.message });
+  return res.status(200).json({ ok: true, data });
+}
     if (act === 'add_class') {
       const dow = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
       const { error } = await supabase.from('class_sessions').insert([{
