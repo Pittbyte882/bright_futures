@@ -678,9 +678,17 @@ async function showPage(name) {
         <div><span class="badge badge-${s.day_of_week}">${s.day_of_week}</span></div>
         <div><span class="badge ${s.is_active ? 'badge-active' : 'badge-cancelled'}">${s.is_active ? 'Active' : 'Cancelled'}</span></div>
         <div><span class="spots-mini ${spotsClass}">${spotsLabel} spots</span></div>
-        <div style="display:flex;gap:4px;align-items:center">
-          <input class="capacity-input" type="number" value="${s.capacity}" min="1" max="100" id="cap-${s.id}" />
-          <button class="capacity-save" onclick="saveCapacity(${s.id})">Save</button>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;gap:4px;align-items:center">
+            <input class="capacity-input" type="number" value="${s.capacity}" min="1" max="100" id="cap-${s.id}" />
+            <button class="capacity-save" onclick="saveCapacity(${s.id})">Cap</button>
+          </div>
+          <div style="display:flex;gap:4px;align-items:center">
+            <input class="capacity-input" style="border-color:var(--coral)" type="number" 
+              value="${s.manual_attendees !== null && s.manual_attendees !== undefined ? s.manual_attendees : ''}" 
+              min="0" max="100" id="att-${s.id}" placeholder="auto" />
+            <button class="capacity-save" style="background:var(--coral)" onclick="saveAttendees(${s.id})">Att</button>
+          </div>
         </div>
         <div></div>
         <div class="session-actions">
@@ -831,6 +839,16 @@ async function showPage(name) {
           <div class="pd-stat">👥 ${rsvpCount} RSVPs</div>
           <div class="pd-stat">🎯 Cap: ${p.capacity}</div>
           ${p.time ? `<div class="pd-stat">⏰ ${p.time}</div>` : ''}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+          <span style="font-size:0.78rem;font-weight:800;color:#888;text-transform:uppercase">Manual Attendees:</span>
+          <input class="inline-input" type="number" 
+            value="${p.manual_attendees !== null && p.manual_attendees !== undefined ? p.manual_attendees : ''}"
+            placeholder="auto" min="0" max="200" style="width:80px" id="pdatt-${p.id}" />
+          <button class="action-btn btn-sky" onclick="savePlaydateAttendees(${p.id})">Set</button>
+          ${p.manual_attendees !== null && p.manual_attendees !== undefined 
+            ? `<button class="action-btn" style="background:#eee;color:#888" onclick="clearAttendees(${p.id})">Clear (use auto)</button>` 
+            : '<span style="font-size:.75rem;color:#aaa">Currently auto-counting RSVPs</span>'}
         </div>
         <div class="pd-mgmt-actions">
           <button class="action-btn btn-edit" onclick="editPlaydate(${p.id})">Edit</button>
@@ -1204,6 +1222,53 @@ async function saveTitle(id) {
     if (s) s.title = title;
     if (title) showToast('✅ Title saved', 'success');
   } catch { showToast('Failed to save title', 'error'); }
+
+}
+async function saveAttendees(id) {
+  const val = document.getElementById('att-' + id)?.value;
+  const manual_attendees = val === '' ? null : parseInt(val);
+  try {
+    const res = await fetch('/api/admin?action=sessions', {
+      method:'PATCH', headers:{'Content-Type':'application/json','x-admin':'1'},
+      body: JSON.stringify({id, manual_attendees})
+    });
+    if (!res.ok) throw new Error();
+    const s = allSessions.find(s => s.id === id);
+    if (s) s.manual_attendees = manual_attendees;
+    showToast(manual_attendees === null ? '✅ Cleared — using auto count' : `✅ Attendees set to ${manual_attendees}`, 'success');
+  } catch { showToast('Failed to update attendees', 'error'); }
+}
+
+async function savePlaydateAttendees(id) {
+  const val = document.getElementById('pdatt-' + id)?.value;
+  const manual_attendees = val === '' ? null : parseInt(val);
+  try {
+    const res = await fetch('/api/admin?action=sessions', {
+      method:'PATCH', headers:{'Content-Type':'application/json','x-admin':'1'},
+      body: JSON.stringify({id, manual_attendees})
+    });
+    if (!res.ok) throw new Error();
+    const p = allPlaydates.find(p => p.id === id);
+    if (p) p.manual_attendees = manual_attendees;
+    await loadPlaydates();
+    renderPlaydateCards();
+    showToast(manual_attendees === null ? '✅ Cleared — using RSVP count' : `✅ Attendees set to ${manual_attendees}`, 'success');
+  } catch { showToast('Failed to update attendees', 'error'); }
+}
+
+async function clearAttendees(id) {
+  try {
+    const res = await fetch('/api/admin?action=sessions', {
+      method:'PATCH', headers:{'Content-Type':'application/json','x-admin':'1'},
+      body: JSON.stringify({id, manual_attendees: null})
+    });
+    if (!res.ok) throw new Error();
+    const p = allPlaydates.find(p => p.id === id);
+    if (p) p.manual_attendees = null;
+    await loadPlaydates();
+    renderPlaydateCards();
+    showToast('✅ Cleared — now using auto RSVP count', 'success');
+  } catch { showToast('Failed to clear', 'error'); }
 }
   // ── HELPERS ──
   function pkgLabel(p) { return {single:'Single ($40)','3class':'3-Class ($110)','4class':'4-Class ($140)'}[p]||p; }

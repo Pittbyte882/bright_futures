@@ -762,13 +762,16 @@
     if (isSelected) cell.classList.add('selected');
     const typeLabels = {monday:'Mon',wednesday:'Wed',friday:'Fri'};
     const typeClasses = {monday:'ct-mon',wednesday:'ct-wed',friday:'ct-fri'};
-    const spotsLabel = isFull ? 'Full' : isAlmost ? `${remaining} left!` : `${remaining} spots`;
+    const attending = parseInt(session.spots_taken) || 0;
+    const spotsLabel = isFull ? 'Full' : isAlmost ? `${remaining} left!` : `${remaining} spots`; // added for count display
+    const attendingLabel = attending > 0 ? `${attending} attending` : '';
     const spotsClass = isFull ? 'full-label' : isAlmost ? 'almost' : '';
     cell.innerHTML = `
       <div class="cell-check">✓</div>
       <div class="cell-num">${d}</div>
       <div class="cell-type ${typeClasses[dow]}">${typeLabels[dow]}</div>
-      <div class="cell-spots ${spotsClass}">${spotsLabel}</div>`;
+      <div class="cell-spots ${spotsClass}">${spotsLabel}</div>
+      ${attendingLabel ? `<div style="font-size:.55rem;color:rgba(255,255,255,0.45);font-weight:700">${attendingLabel}</div>` : ''}`; //added
     if (!isFull && !isPast) cell.onclick = () => toggleSession(session.id, cell);
 
   } else if (playdate) {
@@ -776,7 +779,8 @@
     cell.innerHTML = `
       <div class="cell-star">⭐</div>
       <div class="cell-num">${d}</div>
-      <div class="cell-type ct-play">Play</div>`;
+      <div class="cell-type ct-play">Play</div>
+      ${attendingLabel ? `<div style="font-size:.55rem;color:rgba(255,255,255,0.45);font-weight:700">${attendingLabel}</div>` : ''}`; //added
     if (!isPast) cell.onclick = () => openRsvpModal(playdate);
 
   } else {

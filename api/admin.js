@@ -81,10 +81,11 @@ if (action === 'sessions') {
 
   if (req.method === 'PATCH') {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const { id, capacity, is_active, day_of_week, theme, time, description, instructions, title } = body;
+    const { id, capacity, is_active, day_of_week, theme, time, description, instructions, title, manual_attendees } = body;
     const updates = {};
     if (capacity !== undefined) updates.capacity = capacity;
     if (is_active !== undefined) updates.is_active = is_active;
+    if (manual_attendees !== undefined) updates.manual_attendees = manual_attendees;
     if (theme !== undefined) updates.theme = theme;
     if (time !== undefined) updates.time = time;
     if (description !== undefined) updates.description = description;
