@@ -696,51 +696,94 @@
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
-      const dateStr = padDate(viewYear, viewMonth, d);
-      const cellDate = new Date(viewYear, viewMonth, d);
-      cellDate.setHours(0,0,0,0);
-      const isPast = cellDate < today;
-      const isToday = cellDate.getTime() === today.getTime();
-      const session = getSessionForDate(dateStr);
-      const playdate = getPlaydateForDate(dateStr);
-      const cell = document.createElement('div');
-      cell.className = 'cal-cell';
-      if (isPast) cell.classList.add('past');
-      if (isToday) cell.classList.add('today');
+  const dateStr = padDate(viewYear, viewMonth, d);
+  const cellDate = new Date(viewYear, viewMonth, d);
+  cellDate.setHours(0,0,0,0);
+  const isPast = cellDate < today;
+  const isToday = cellDate.getTime() === today.getTime();
+  const session = getSessionForDate(dateStr);
+  const playdate = getPlaydateForDate(dateStr);
 
-      if (session) {
-        const dow = session.day_of_week;
-        const remaining = parseInt(session.spots_remaining);
-        const isFull = remaining <= 0;
-        const isAlmost = remaining > 0 && remaining <= 3;
-        const isSelected = selectedIds.has(session.id);
-        cell.classList.add('class-day', dow+'-day');
-        if (isFull || isPast) cell.classList.add('full');
-        if (isSelected) cell.classList.add('selected');
-        const typeLabels = {monday:'Mon',wednesday:'Wed',friday:'Fri'};
-        const typeClasses = {monday:'ct-mon',wednesday:'ct-wed',friday:'ct-fri'};
-        const spotsLabel = isFull ? 'Full' : isAlmost ? `${remaining} left!` : `${remaining} spots`;
-        const spotsClass = isFull ? 'full-label' : isAlmost ? 'almost' : '';
-        cell.innerHTML = `
-          <div class="cell-check">✓</div>
-          <div class="cell-num">${d}</div>
-          <div class="cell-type ${typeClasses[dow]}">${typeLabels[dow]}</div>
-          <div class="cell-spots ${spotsClass}">${spotsLabel}</div>`;
-        if (!isFull && !isPast) cell.onclick = () => toggleSession(session.id, cell);
+  // If both exist on same day wrap them in a container cell
+  if (session && playdate && !isPast) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'cal-cell';
+    wrapper.style.cssText = 'display:flex;flex-direction:column;gap:4px;aspect-ratio:unset;padding:4px;';
+    if (isPast) wrapper.classList.add('past');
+    if (isToday) wrapper.classList.add('today');
 
-      } else if (playdate) {
-        cell.classList.add('play-day');
-        cell.innerHTML = `
-          <div class="cell-star">⭐</div>
-          <div class="cell-num">${d}</div>
-          <div class="cell-type ct-play">Play</div>`;
-        if (!isPast) cell.onclick = () => openRsvpModal(playdate);
+    // Class mini cell
+    const dow = session.day_of_week;
+    const remaining = parseInt(session.spots_remaining);
+    const isFull = remaining <= 0;
+    const isSelected = selectedIds.has(session.id);
+    const typeClasses = {monday:'ct-mon',wednesday:'ct-wed',friday:'ct-fri'};
+    const typeLabels = {monday:'Mon',wednesday:'Wed',friday:'Fri'};
+    const spotsLabel = isFull ? 'Full' : remaining <= 3 ? `${remaining} left!` : `${remaining} spots`;
+    const spotsClass = isFull ? 'full-label' : remaining <= 3 ? 'almost' : '';
 
-      } else {
-        cell.innerHTML = `<div class="cell-num" style="color:rgba(255,255,255,0.18);font-size:1rem">${d}</div>`;
-      }
-      grid.appendChild(cell);
-    }
+    const classDiv = document.createElement('div');
+    classDiv.style.cssText = `flex:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:${isFull?'not-allowed':'pointer'};border:2px solid transparent;background:linear-gradient(135deg,rgba(${dow==='monday'?'255,210,63':dow==='wednesday'?'78,205,196':'132,94,194'},0.25),rgba(${dow==='monday'?'255,210,63':dow==='wednesday'?'78,205,196':'132,94,194'},0.1));`;
+    if (isSelected) classDiv.style.border = `2px solid var(--${dow==='monday'?'mon':dow==='wednesday'?'wed':'fri'})`;
+    classDiv.innerHTML = `
+      <div class="cell-num" style="font-size:.9rem">${d}</div>
+      <div class="cell-type ${typeClasses[dow]}" style="font-size:.5rem">${typeLabels[dow]}</div>
+      <div class="cell-spots ${spotsClass}" style="font-size:.55rem">${spotsLabel}</div>`;
+    if (!isFull) classDiv.onclick = () => toggleSession(session.id, classDiv);
+    wrapper.appendChild(classDiv);
+
+    // Playdate mini cell
+    const pdDiv = document.createElement('div');
+    pdDiv.style.cssText = 'flex:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;background:linear-gradient(135deg,rgba(255,107,107,0.25),rgba(255,107,107,0.1));border:2px solid rgba(255,107,107,0.3);';
+    pdDiv.innerHTML = `
+      <div style="font-size:.75rem">🎉</div>
+      <div class="cell-type ct-play" style="font-size:.5rem">Play</div>`;
+    pdDiv.onclick = () => openRsvpModal(playdate);
+    wrapper.appendChild(pdDiv);
+
+    grid.appendChild(wrapper);
+    continue;
+  }
+
+  // Normal single session rendering
+  const cell = document.createElement('div');
+  cell.className = 'cal-cell';
+  if (isPast) cell.classList.add('past');
+  if (isToday) cell.classList.add('today');
+
+  if (session) {
+    const dow = session.day_of_week;
+    const remaining = parseInt(session.spots_remaining);
+    const isFull = remaining <= 0;
+    const isAlmost = remaining > 0 && remaining <= 3;
+    const isSelected = selectedIds.has(session.id);
+    cell.classList.add('class-day', dow+'-day');
+    if (isFull || isPast) cell.classList.add('full');
+    if (isSelected) cell.classList.add('selected');
+    const typeLabels = {monday:'Mon',wednesday:'Wed',friday:'Fri'};
+    const typeClasses = {monday:'ct-mon',wednesday:'ct-wed',friday:'ct-fri'};
+    const spotsLabel = isFull ? 'Full' : isAlmost ? `${remaining} left!` : `${remaining} spots`;
+    const spotsClass = isFull ? 'full-label' : isAlmost ? 'almost' : '';
+    cell.innerHTML = `
+      <div class="cell-check">✓</div>
+      <div class="cell-num">${d}</div>
+      <div class="cell-type ${typeClasses[dow]}">${typeLabels[dow]}</div>
+      <div class="cell-spots ${spotsClass}">${spotsLabel}</div>`;
+    if (!isFull && !isPast) cell.onclick = () => toggleSession(session.id, cell);
+
+  } else if (playdate) {
+    cell.classList.add('play-day');
+    cell.innerHTML = `
+      <div class="cell-star">⭐</div>
+      <div class="cell-num">${d}</div>
+      <div class="cell-type ct-play">Play</div>`;
+    if (!isPast) cell.onclick = () => openRsvpModal(playdate);
+
+  } else {
+    cell.innerHTML = `<div class="cell-num" style="color:rgba(255,255,255,0.18);font-size:1rem">${d}</div>`;
+  }
+  grid.appendChild(cell);
+}
   }
 
   function toggleSession(sessionId, cell) {
