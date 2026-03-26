@@ -30,76 +30,79 @@ export default async function handler(req, res) {
   if (req.headers['x-admin'] !== '1') return res.status(401).json({ error: 'Unauthorized' });
 
   // ── SESSIONS: /api/admin?action=sessions ──
-  if (action === 'sessions') {
-    if (req.method === 'GET') {
-      const { data, error } = await supabase
-        .from('session_availability').select('*').order('date', { ascending: true });
+if (action === 'sessions') {
+  if (req.method === 'GET') {
+    const { data, error } = await supabase
+      .from('session_availability').select('*').order('date', { ascending: true });
+    if (error) return res.status(500).json({ error: error.message });
+    return res.status(200).json(data);
+  }
+
+  if (req.method === 'POST') {
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const { action: act, year, month, capacity, date, theme, title, age_group } = body;
+
+    if (act === 'generate') {
+      const { error } = await supabase.rpc('generate_monthly_sessions', { year, month, cap: capacity || 10 });
       if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json(data);
+      return res.status(200).json({ ok: true });
     }
-    if (req.method === 'POST') {
-  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-  const { action: act, year, month, capacity, date, theme, title, day_of_week, age_group, session_type } = body;
 
-  if (act === 'generate') {
-    const { error } = await supabase.rpc('generate_monthly_sessions', { year, month, cap: capacity || 10 });
+    if (act === 'add_playdate') {
+      const dow = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+      const { error } = await supabase.from('class_sessions').insert([{
+        date, day_of_week: dow, age_group: 'all',
+        capacity: capacity || 30, session_type: 'playdate',
+        theme: theme || '', title: title || ''
+      }]);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ ok: true });
+    }
+
+    if (act === 'add_class') {
+      const dow = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+      const { error } = await supabase.from('class_sessions').insert([{
+        date, day_of_week: dow, age_group: age_group || '3-6',
+        capacity: capacity || 10, session_type: 'class',
+        title: title || '', is_active: true
+      }]);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ ok: true });
+    }
+  }
+
+  if (req.method === 'PATCH') {
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const { id, capacity, is_active, day_of_week, theme, time, description, instructions, title } = body;
+    const updates = {};
+    if (capacity !== undefined) updates.capacity = capacity;
+    if (is_active !== undefined) updates.is_active = is_active;
+    if (theme !== undefined) updates.theme = theme;
+    if (time !== undefined) updates.time = time;
+    if (description !== undefined) updates.description = description;
+    if (instructions !== undefined) updates.instructions = instructions;
+    if (title !== undefined) updates.title = title;
+    if (day_of_week && !id) {
+      const { error } = await supabase
+        .from('class_sessions')
+        .update(updates)
+        .eq('day_of_week', day_of_week)
+        .eq('session_type', 'class');
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ ok: true });
+    }
+    const { error } = await supabase.from('class_sessions').update(updates).eq('id', id);
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ ok: true });
   }
 
-  if (act === 'add_playdate') {
-    const dow = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    const { error } = await supabase.from('class_sessions').insert([{
-      date, day_of_week: dow, age_group: 'all',
-      capacity: capacity || 30, session_type: 'playdate',
-      theme: theme || '', title: title || ''
-    }]);
-    if (error) return res.status(500).json({ error: error.message });
-    return res.status(200).json({ ok: true });
-  }
-
-  // Add a custom single class session
-  if (act === 'add_class') {
-    const dow = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    const { error } = await supabase.from('class_sessions').insert([{
-      date,
-      day_of_week: dow,
-      age_group: age_group || '3-6',
-      capacity: capacity || 10,
-      session_type: 'class',
-      title: title || '',
-      is_active: true
-    }]);
+  if (req.method === 'DELETE') {
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const { error } = await supabase.from('class_sessions').delete().eq('id', body.id);
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ ok: true });
   }
 }
-    }
-    if (req.method === 'PATCH') {
-  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-  const { id, capacity, is_active, day_of_week, theme, time, description, instructions, title } = body;
-  const updates = {};
-  if (capacity !== undefined) updates.capacity = capacity;
-  if (is_active !== undefined) updates.is_active = is_active;
-  if (theme !== undefined) updates.theme = theme;
-  if (time !== undefined) updates.time = time;
-  if (description !== undefined) updates.description = description;
-  if (instructions !== undefined) updates.instructions = instructions;
-  if (title !== undefined) updates.title = title;
-  if (day_of_week && !id) {
-    const { error } = await supabase
-      .from('class_sessions')
-      .update(updates)
-      .eq('day_of_week', day_of_week)
-      .eq('session_type', 'class');
-    if (error) return res.status(500).json({ error: error.message });
-    return res.status(200).json({ ok: true });
-  }
-  const { error } = await supabase.from('class_sessions').update(updates).eq('id', id);
-  if (error) return res.status(500).json({ error: error.message });
-  return res.status(200).json({ ok: true });
-}
-
   // ── REGISTRATIONS: /api/admin?action=registrations ──
   if (action === 'registrations') {
     if (req.method === 'GET') {
