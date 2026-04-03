@@ -66,7 +66,7 @@ export default async function handler(req, res) {
           <div style="background:#FFE8E8;border-left:4px solid #FF6B6B;padding:16px;border-radius:8px;margin:20px 0">
             <strong>⚠️ Payment Required Within 24 Hours</strong><br/>
             Your spot will be released if payment is not received within 24 hours of booking.
-            Please send payment via Venmo: <strong>@${process.env.VENMO_HANDLE}</strong>
+            Please send payment via Venmo: <strong>${process.env.VENMO_HANDLE}</strong>
           </div>
           <p>Questions? Reply to this email or contact us at 
             <a href="mailto:Brightfuturesgrowingmindsllc@gmail.com">Brightfuturesgrowingmindsllc@gmail.com</a>
