@@ -1271,7 +1271,7 @@ async function clearAttendees(id) {
   } catch { showToast('Failed to clear', 'error'); }
 }
   // ── HELPERS ──
-  function pkgLabel(p) { return {single:'Single ($40)','3class':'3-Class ($110)','4class':'4-Class ($140)'}[p]||p; }
+  function pkgLabel(p) { return {single:'Single ($50)','3class':'3-Class ($125)','4class':'4-Class ($150)'}[p]||p; }
   function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function formatDate(d) { return d?new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—'; }
   function showToast(msg, type='') {
