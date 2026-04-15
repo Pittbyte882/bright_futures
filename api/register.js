@@ -64,10 +64,12 @@ export default async function handler(req, res) {
           <p style="background:#FFF0E6;padding:16px;border-radius:12px;line-height:2">${dateList}</p>
           <h3 style="color:#1A1A2E">Package: ${pkg} — ${price}</h3>
           <div style="background:#FFE8E8;border-left:4px solid #FF6B6B;padding:16px;border-radius:8px;margin:20px 0">
-            <strong>⚠️ Payment Required Within 24 Hours</strong><br/>
-            Your spot will be released if payment is not received within 24 hours of booking.
-            Please send payment via Venmo: <strong>${process.env.VENMO_HANDLE}</strong>
-          </div>
+              <strong>⚠️ Payment Required Within 24 Hours</strong><br/>
+              Your spot will be released if payment is not received within 24 hours of booking.<br/><br/>
+              Please send payment using any of the options below:<br/><br/>
+              💜 <strong>Venmo:</strong> @brightfuturesgrow-here<br/>
+              💙 <strong>Zelle:</strong> brightfuturesgrow-here<br/>
+            </div>
           <p>Questions? Reply to this email or contact us at 
             <a href="mailto:Brightfuturesgrowingmindsllc@gmail.com">Brightfuturesgrowingmindsllc@gmail.com</a>
           </p>
